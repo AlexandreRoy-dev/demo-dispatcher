@@ -16,7 +16,10 @@ export function buildGoogleMapsRouteUrl(result: OptimizeRouteResponse): string {
   return `https://www.google.com/maps/dir/?${params.toString()}`;
 }
 
-export function buildRouteShareText(result: OptimizeRouteResponse): string {
+export function buildRouteShareText(
+  result: OptimizeRouteResponse,
+  techName = "Jordan Hale",
+): string {
   const details: OptimizedStop[] =
     result.optimizedStopDetails?.length > 0
       ? result.optimizedStopDetails
@@ -26,7 +29,7 @@ export function buildRouteShareText(result: OptimizeRouteResponse): string {
         }));
 
   const lines = [
-    "Tournée optimisée - Jordan Hale",
+    `Tournée optimisée - ${techName}`,
     `Temps de route (trafic) : ${result.totalDurationText}`,
     `Temps sur place : ${result.totalOnSiteText}`,
     `Journée estimée : ${result.totalDayText}`,

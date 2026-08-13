@@ -7,6 +7,10 @@ export type OptimizeRouteRequest = {
   start: string;
   stops: StopInput[];
   end?: string;
+  /** Default true. Set false to keep the given stop order (pinned planned calls). */
+  optimize?: boolean;
+  /** ISO timestamp; must be in the future for traffic-aware routing. */
+  departureTime?: string;
 };
 
 export type LatLng = {

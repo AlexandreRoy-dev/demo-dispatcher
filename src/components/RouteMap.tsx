@@ -7,6 +7,7 @@ import type { OptimizeRouteResponse } from "@/lib/types";
 
 type RouteMapProps = {
   result: OptimizeRouteResponse | null;
+  defaultCenter?: { lat: number; lng: number };
 };
 
 function RouteOverlay({ result }: { result: OptimizeRouteResponse }) {
@@ -59,7 +60,10 @@ function RouteOverlay({ result }: { result: OptimizeRouteResponse }) {
   return null;
 }
 
-export function RouteMap({ result }: RouteMapProps) {
+export function RouteMap({
+  result,
+  defaultCenter = { lat: 45.5017, lng: -73.5673 },
+}: RouteMapProps) {
   return (
     <section className="panel map-panel">
       <div className="panel-heading">
@@ -67,7 +71,7 @@ export function RouteMap({ result }: RouteMapProps) {
       </div>
       <div className="map-shell">
         <Map
-          defaultCenter={{ lat: 45.5017, lng: -73.5673 }}
+          defaultCenter={defaultCenter}
           defaultZoom={11}
           gestureHandling="greedy"
           disableDefaultUI={false}

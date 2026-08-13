@@ -1,0 +1,226 @@
+id,type,magasin,adresse,ville,region,equipement,equipement_id,netsuite_id,planifie,heure,tech_id,opened_at
+NS-10001,reactif,Couche-Tard Drummondville — DÉLAI DÉPASSÉ,"1106 rue du Portage, Nicolet, QC",Nicolet,Centre-du-Québec,BW3 Désinstallé,38,NS-10001,0,,,2026-08-07
+NS-10002,reactif,CLSC Bécancour,"1353 boulevard Bécancour, Bécancour, QC",Bécancour,Centre-du-Québec,Distributrice,25,NS-10002,0,,,2026-08-12
+NS-10003,reactif,Subway Victoriaville,"420 rue Laurier, Victoriaville, QC",Victoriaville,Centre-du-Québec,Machine à Glace,15,NS-10003,0,,,2026-08-13
+NS-10004,reactif,A&W Drummondville,"647 rue Brock, Drummondville, QC",Drummondville,Centre-du-Québec,Distributeur à sucre,20,NS-10004,0,,,2026-08-12
+NS-10005,reactif,Dépanneur 7 jours Trois-Rivières,"743 boulevard des Chenaux, Trois-Rivières, QC",Trois-Rivières,Mauricie,Lassonde,39,NS-10005,0,,,2026-08-13
+NS-10006,reactif,Tim Hortons Nicolet,"1465 rue du Portage, Nicolet, QC",Nicolet,Centre-du-Québec,Table chaude,40,NS-10006,0,,,2026-08-13
+NS-10007,reactif,Starbucks Trois-Rivières,"487 rue des Forges, Trois-Rivières, QC",Trois-Rivières,Mauricie,Lassonde,39,NS-10007,0,,,2026-08-13
+NS-10008,reactif,Harvey's — Rue Du Portage,"1441 rue du Portage, Nicolet, QC",Nicolet,Centre-du-Québec,Réfrigérateur,28,NS-10008,0,,,2026-08-12
+NS-10009,reactif,Métro Trois-Rivières,"221 rue Royale, Trois-Rivières, QC",Trois-Rivières,Mauricie,Café filtre,5,NS-10009,0,,,2026-08-12
+NS-10010,reactif,Subway Magog,"1826 rue Principale Ouest, Magog, QC",Magog,Estrie,Moulin,17,NS-10010,0,,,2026-08-12
+NS-10011,reactif,A&W Drummondville,"565 rue de l'Éclipse, Drummondville, QC",Drummondville,Centre-du-Québec,BW3 Désinstallé,38,NS-10011,0,,,2026-08-12
+NS-10012,reactif,Starbucks — Rue Notre-Dame Est,"1393 rue Notre-Dame Est, Thetford Mines, QC",Thetford Mines,Chaudière-Appalaches,Krystaline,29,NS-10012,0,,,2026-08-12
+NS-10013,reactif,Dépanneur 7 jours — 9E Rue Sud,"1313 9e Rue Sud, Thetford Mines, QC",Thetford Mines,Chaudière-Appalaches,PopCorn,12,NS-10013,0,,,2026-08-13
+NS-10014,reactif,La Belle Province — Boulevard Des Bois-Francs,"1666 boulevard des Bois-Francs, Victoriaville, QC",Victoriaville,Centre-du-Québec,Distributeur lait/crème,8,NS-10014,0,,,2026-08-13
+NS-10015,reactif,Tim Hortons Sorel-Tracy,"1381 rue du Prince, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Filtration d'eau,6,NS-10015,0,,,2026-08-12
+NS-10016,reactif,Couche-Tard Trois-Rivières,"150 boulevard des Récollets, Trois-Rivières, QC",Trois-Rivières,Mauricie,Machine à Glace,15,NS-10016,0,,,2026-08-13
+NS-10017,reactif,CLSC Bécancour,"108 avenue des Érables, Bécancour, QC",Bécancour,Centre-du-Québec,Polar-pop,33,NS-10017,0,,,2026-08-12
+NS-10018,reactif,Couche-Tard Victoriaville,"365 rue de l'Aqueduc, Victoriaville, QC",Victoriaville,Centre-du-Québec,ADMIN,37,NS-10018,0,,,2026-08-12
+NS-10019,reactif,Hôtel Le Dauphin Thetford Mines,"903 9e Rue Sud, Thetford Mines, QC",Thetford Mines,Chaudière-Appalaches,Distributeur à eau chaude,22,NS-10019,0,,,2026-08-13
+NS-10020,reactif,Benny&Co — Rue Sherbrooke,"774 rue Sherbrooke, Magog, QC",Magog,Estrie,Thermos,19,NS-10020,0,,,2026-08-12
+NS-10021,reactif,McDonald's Sorel-Tracy,"1220 boulevard Fiset, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Espresso,2,NS-10021,0,,,2026-08-13
+NS-10022,reactif,CLSC Bécancour,"1379 avenue des Érables, Bécancour, QC",Bécancour,Centre-du-Québec,CT CUR-GEM3IF,32,NS-10022,0,,,2026-08-12
+NS-10023,reactif,Starbucks Victoriaville,"1539 rue Laurier, Victoriaville, QC",Victoriaville,Centre-du-Québec,Thé,21,NS-10023,0,,,2026-08-13
+NS-10024,reactif,McDonald's — 9E Rue Sud,"1592 9e Rue Sud, Thetford Mines, QC",Thetford Mines,Chaudière-Appalaches,Réfrigérateur,28,NS-10024,0,,,2026-08-13
+NS-10025,reactif,Restaurant du Parc — 12E Avenue Nord,"744 12e Avenue Nord, Sherbrooke, QC",Sherbrooke,Estrie,Lave-vaisselle,26,NS-10025,0,,,2026-08-12
+NS-10026,preventif,La Belle Province — Rue Augusta,"880 rue Augusta, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Lave-vaisselle,26,NS-10026,1,08:00,21,2026-07-15
+NS-10027,preventif,Hôtel Le Dauphin Magog,"1498 rue Principale Ouest, Magog, QC",Magog,Estrie,Réchaud,3,NS-10027,1,13:00,5,2026-07-01
+NS-10028,preventif,Subway Trois-Rivières,"1470 rue Hart, Trois-Rivières, QC",Trois-Rivières,Mauricie,Boissons en fontaine,27,NS-10028,1,11:00,5,2026-08-01
+NS-10029,preventif,Starbucks Victoriaville,"1798 rue Laurier, Victoriaville, QC",Victoriaville,Centre-du-Québec,Distributrice,25,NS-10029,1,09:00,5,2026-08-10
+NS-10030,preventif,Starbucks Magog,"791 rue Sherbrooke, Magog, QC",Magog,Estrie,Accessoire TP,30,NS-10030,1,10:00,18,2026-08-10
+NS-10031,preventif,Tim Hortons — Rue De L'Aqueduc,"795 rue de l'Aqueduc, Victoriaville, QC",Victoriaville,Centre-du-Québec,PIÈCES RP,35,NS-10031,1,09:30,12,2026-08-10
+NS-10032,preventif,Brûlerie locale Sorel-Tracy,"1528 rue du Prince, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Distributrice,25,NS-10032,1,09:30,18,2026-08-10
+NS-10033,preventif,Dollarama Nicolet,"305 rue Notre-Dame, Nicolet, QC",Nicolet,Centre-du-Québec,Krystaline,29,NS-10033,1,09:30,12,2026-08-10
+NS-10034,preventif,Tim Hortons Thetford Mines,"1193 9e Rue Sud, Thetford Mines, QC",Thetford Mines,Chaudière-Appalaches,Distributeur lait/crème,8,NS-10034,0,,,2026-07-01
+NS-10035,preventif,Tim Hortons Magog,"968 rue Sherbrooke, Magog, QC",Magog,Estrie,PIÈCES RP,35,NS-10035,0,,,2026-08-01
+NS-10036,preventif,Benny&Co — Boulevard Louis-Fréchette,"1875 boulevard Louis-Fréchette, Nicolet, QC",Nicolet,Centre-du-Québec,Refroidisseur,31,NS-10036,0,,,2026-08-10
+NS-10037,preventif,Restaurant du Parc Sherbrooke,"1685 12e Avenue Nord, Sherbrooke, QC",Sherbrooke,Estrie,Distributeur à eau chaude,22,NS-10037,0,,,2026-07-01
+NS-10038,preventif,Benny&Co Victoriaville,"264 rue Laurier, Victoriaville, QC",Victoriaville,Centre-du-Québec,PopCorn,12,NS-10038,0,,,2026-07-01
+NS-10039,preventif,Couche-Tard — Avenue Des Érables,"1526 avenue des Érables, Bécancour, QC",Bécancour,Centre-du-Québec,PopCorn,12,NS-10039,0,,,2026-08-10
+NS-10040,preventif,Brûlerie locale — Rue Notre-Dame,"1808 rue Notre-Dame, Nicolet, QC",Nicolet,Centre-du-Québec,Four Micro-onde,13,NS-10040,0,,,2026-08-01
+NS-10041,preventif,Starbucks Sherbrooke,"210 12e Avenue Nord, Sherbrooke, QC",Sherbrooke,Estrie,Boissons en fontaine,27,NS-10041,0,,,2026-07-15
+NS-10042,preventif,Benny&Co Victoriaville,"1019 boulevard des Bois-Francs, Victoriaville, QC",Victoriaville,Centre-du-Québec,Table chaude,40,NS-10042,0,,,2026-07-01
+NS-10043,preventif,IGA Extra Magog,"1861 rue Sherbrooke, Magog, QC",Magog,Estrie,Hotte,10,NS-10043,0,,,2026-07-01
+NS-10044,preventif,Dépanneur 7 jours — Avenue De La Station,"1054 avenue de la Station, Shawinigan, QC",Shawinigan,Mauricie,Lave-vaisselle,26,NS-10044,0,,,2026-08-10
+NS-10045,preventif,Harvey's — Rue Des Forges,"1048 rue des Forges, Drummondville, QC",Drummondville,Centre-du-Québec,Krystaline,29,NS-10045,0,,,2026-08-01
+NS-10046,preventif,McDonald's Victoriaville,"1500 boulevard Jutras, Victoriaville, QC",Victoriaville,Centre-du-Québec,ADMIN,37,NS-10046,0,,,2026-07-01
+NS-10047,preventif,Harvey's Drummondville,"1891 rue Cockburn, Drummondville, QC",Drummondville,Centre-du-Québec,Boissons en fontaine,27,NS-10047,0,,,2026-08-01
+NS-10048,preventif,Tim Hortons — Boulevard Bécancour,"1484 boulevard Bécancour, Bécancour, QC",Bécancour,Centre-du-Québec,Table chaude,40,NS-10048,0,,,2026-07-15
+NS-10049,preventif,McDonald's Shawinigan,"612 avenue de la Station, Shawinigan, QC",Shawinigan,Mauricie,Four Micro-onde,13,NS-10049,0,,,2026-07-01
+NS-10050,preventif,Hôtel Le Dauphin — Rue King Ouest,"1308 rue King Ouest, Sherbrooke, QC",Sherbrooke,Estrie,Distributrice,25,NS-10050,0,,,2026-08-10
+NS-10051,preventif,Couche-Tard Thetford Mines,"1086 9e Rue Sud, Thetford Mines, QC",Thetford Mines,Chaudière-Appalaches,Distributeur à eau chaude,22,NS-10051,0,,,2026-07-01
+NS-10052,preventif,Starbucks Sherbrooke,"1720 12e Avenue Nord, Sherbrooke, QC",Sherbrooke,Estrie,Accessoire TP,30,NS-10052,0,,,2026-07-15
+NS-10053,preventif,McDonald's Drummondville,"587 rue Brock, Drummondville, QC",Drummondville,Centre-du-Québec,Distributeur lait/crème,8,NS-10053,0,,,2026-07-15
+NS-10054,preventif,Couche-Tard Victoriaville,"798 rue de l'Aqueduc, Victoriaville, QC",Victoriaville,Centre-du-Québec,Four Combi,9,NS-10054,0,,,2026-07-15
+NS-10055,preventif,Hôtel Le Dauphin Sherbrooke,"1874 boulevard de Portland, Sherbrooke, QC",Sherbrooke,Estrie,Moulin,17,NS-10055,0,,,2026-07-15
+NS-10056,preventif,Dollarama Magog,"1422 rue Sherbrooke, Magog, QC",Magog,Estrie,Filtration d'eau,6,NS-10056,0,,,2026-07-01
+NS-10057,preventif,CLSC Drummondville,"1641 rue Brock, Drummondville, QC",Drummondville,Centre-du-Québec,ADMIN,37,NS-10057,0,,,2026-07-15
+NS-10058,preventif,McDonald's — Rue Lindsay,"64 rue Lindsay, Drummondville, QC",Drummondville,Centre-du-Québec,PIÈCES RP,35,NS-10058,0,,,2026-08-10
+NS-10059,preventif,Brûlerie locale — Boulevard De Portland,"1438 boulevard de Portland, Sherbrooke, QC",Sherbrooke,Estrie,Panini,23,NS-10059,0,,,2026-08-01
+NS-10060,preventif,IGA Extra Sorel-Tracy,"1481 boulevard Fiset, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Roller Grill,4,NS-10060,0,,,2026-08-01
+NS-10061,preventif,IGA Extra Nicolet,"1820 rue Notre-Dame, Nicolet, QC",Nicolet,Centre-du-Québec,Polar-pop,33,NS-10061,0,,,2026-08-10
+NS-10062,preventif,Tim Hortons Magog,"1263 rue Principale Ouest, Magog, QC",Magog,Estrie,Boissons en fontaine,27,NS-10062,0,,,2026-08-01
+NS-10063,preventif,École secondaire — Boulevard Foucault,"57 boulevard Foucault, Drummondville, QC",Drummondville,Centre-du-Québec,Frigo à Condiments,18,NS-10063,0,,,2026-07-01
+NS-10064,preventif,La Belle Province Sherbrooke,"1349 rue King Ouest, Sherbrooke, QC",Sherbrooke,Estrie,Espresso,2,NS-10064,0,,,2026-07-01
+NS-10065,preventif,Dépanneur 7 jours Drummondville,"419 rue Cockburn, Drummondville, QC",Drummondville,Centre-du-Québec,K-Cup,24,NS-10065,0,,,2026-07-15
+NS-10066,preventif,Starbucks Thetford Mines,"1610 9e Rue Sud, Thetford Mines, QC",Thetford Mines,Chaudière-Appalaches,Filtration d'eau,6,NS-10066,0,,,2026-07-15
+NS-10067,preventif,Starbucks Thetford Mines,"694 9e Rue Sud, Thetford Mines, QC",Thetford Mines,Chaudière-Appalaches,Grille-Pain,11,NS-10067,0,,,2026-08-10
+NS-10068,preventif,A&W Drummondville,"1762 rue des Forges, Drummondville, QC",Drummondville,Centre-du-Québec,Boissons en fontaine,27,NS-10068,0,,,2026-07-15
+NS-10069,preventif,Cafeteria industrielle Thetford Mines,"725 boulevard Frontenac, Thetford Mines, QC",Thetford Mines,Chaudière-Appalaches,Four Micro-onde,13,NS-10069,0,,,2026-07-15
+NS-10070,preventif,Hôtel Le Dauphin Thetford Mines,"159 9e Rue Sud, Thetford Mines, QC",Thetford Mines,Chaudière-Appalaches,Site,1,NS-10070,0,,,2026-08-01
+NS-10071,preventif,A&W — Rue Des Forges,"1455 rue des Forges, Trois-Rivières, QC",Trois-Rivières,Mauricie,Grille-Pain,11,NS-10071,0,,,2026-07-15
+NS-10072,preventif,Cafeteria industrielle Nicolet,"783 rue Notre-Dame, Nicolet, QC",Nicolet,Centre-du-Québec,Frigo à Condiments,18,NS-10072,0,,,2026-07-15
+NS-10073,preventif,Restaurant du Parc Sherbrooke,"1377 rue King Est, Sherbrooke, QC",Sherbrooke,Estrie,Grille-Pain,11,NS-10073,0,,,2026-08-10
+NS-10074,preventif,Tim Hortons Shawinigan,"1834 3e Rue, Shawinigan, QC",Shawinigan,Mauricie,Boissons en fontaine,27,NS-10074,0,,,2026-08-01
+NS-10075,preventif,Brûlerie locale — Boulevard Jutras,"1009 boulevard Jutras, Victoriaville, QC",Victoriaville,Centre-du-Québec,Distributeur à eau chaude,22,NS-10075,0,,,2026-08-01
+NS-10076,preventif,CLSC — Avenue Des Érables,"1735 avenue des Érables, Bécancour, QC",Bécancour,Centre-du-Québec,Thé,21,NS-10076,0,,,2026-08-10
+NS-10077,preventif,Benny&Co — Boulevard Louis-Fréchette,"1104 boulevard Louis-Fréchette, Nicolet, QC",Nicolet,Centre-du-Québec,Machine à Glace,15,NS-10077,0,,,2026-07-01
+NS-10078,preventif,Aréna municipal Drummondville,"400 boulevard Saint-Joseph, Drummondville, QC",Drummondville,Centre-du-Québec,Filtration d'eau,6,NS-10078,0,,,2026-07-15
+NS-10079,preventif,Dépanneur 7 jours Bécancour,"1659 rue de l'Industrie, Bécancour, QC",Bécancour,Centre-du-Québec,Café filtre,5,NS-10079,0,,,2026-07-15
+NS-10080,preventif,La Belle Province — Rue Hart,"686 rue Hart, Trois-Rivières, QC",Trois-Rivières,Mauricie,CT CUR-GEM3IF,32,NS-10080,0,,,2026-07-15
+NS-10081,preventif,La Belle Province Victoriaville,"830 boulevard Jutras, Victoriaville, QC",Victoriaville,Centre-du-Québec,Grille-Pain,11,NS-10081,0,,,2026-08-10
+NS-10082,preventif,École secondaire Victoriaville,"1022 rue de l'Aqueduc, Victoriaville, QC",Victoriaville,Centre-du-Québec,Thermos,19,NS-10082,0,,,2026-07-15
+NS-10083,preventif,CLSC Magog,"519 rue Principale Ouest, Magog, QC",Magog,Estrie,CT CUR-GEM3IF,32,NS-10083,0,,,2026-08-01
+NS-10084,preventif,CLSC — Boulevard Louis-Fréchette,"1335 boulevard Louis-Fréchette, Nicolet, QC",Nicolet,Centre-du-Québec,Site,1,NS-10084,0,,,2026-07-01
+NS-10085,preventif,A&W Trois-Rivières,"739 rue Hart, Trois-Rivières, QC",Trois-Rivières,Mauricie,Accessoire TP,30,NS-10085,0,,,2026-08-01
+NS-10086,preventif,Dépanneur 7 jours Victoriaville,"783 rue de l'Aqueduc, Victoriaville, QC",Victoriaville,Centre-du-Québec,Réchaud,3,NS-10086,0,,,2026-08-01
+NS-10087,preventif,Dépanneur 7 jours Thetford Mines,"777 rue Notre-Dame Est, Thetford Mines, QC",Thetford Mines,Chaudière-Appalaches,KIT ENTRETIEN,34,NS-10087,0,,,2026-08-10
+NS-10088,preventif,Dépanneur 7 jours — Rue Royale,"1372 rue Royale, Trois-Rivières, QC",Trois-Rivières,Mauricie,Panini,23,NS-10088,0,,,2026-08-10
+NS-10089,preventif,McDonald's Sorel-Tracy,"1801 boulevard Fiset, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Distributrice,25,NS-10089,0,,,2026-08-01
+NS-10090,preventif,A&W Sherbrooke,"848 rue Wellington Nord, Sherbrooke, QC",Sherbrooke,Estrie,Four Micro-onde,13,NS-10090,0,,,2026-08-10
+NS-10091,preventif,Restaurant du Parc — Boulevard Bécancour,"1758 boulevard Bécancour, Bécancour, QC",Bécancour,Centre-du-Québec,Distributeur lait/crème,8,NS-10091,0,,,2026-08-01
+NS-10092,preventif,Tim Hortons — Rue Notre-Dame Est,"275 rue Notre-Dame Est, Thetford Mines, QC",Thetford Mines,Chaudière-Appalaches,Distributeur lait/crème,8,NS-10092,0,,,2026-08-10
+NS-10093,preventif,CLSC Sorel-Tracy,"999 boulevard Fiset, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Thermos,19,NS-10093,0,,,2026-08-01
+NS-10094,preventif,Subway Magog,"1093 rue Principale Ouest, Magog, QC",Magog,Estrie,Café filtre,5,NS-10094,0,,,2026-07-15
+NS-10095,preventif,École secondaire Magog,"569 rue Merry Nord, Magog, QC",Magog,Estrie,Grille-Pain,11,NS-10095,0,,,2026-07-15
+NS-10096,preventif,École secondaire Bécancour,"1096 rue de l'Industrie, Bécancour, QC",Bécancour,Centre-du-Québec,Frigo à Condiments,18,NS-10096,0,,,2026-08-01
+NS-10097,preventif,Tim Hortons — 3E Rue,"391 3e Rue, Shawinigan, QC",Shawinigan,Mauricie,BW3 Désinstallé,38,NS-10097,0,,,2026-07-15
+NS-10098,preventif,McDonald's Trois-Rivières,"650 rue Hart, Trois-Rivières, QC",Trois-Rivières,Mauricie,Distributrice,25,NS-10098,0,,,2026-08-01
+NS-10099,preventif,Métro — Boulevard De Portland,"603 boulevard de Portland, Sherbrooke, QC",Sherbrooke,Estrie,Thé,21,NS-10099,0,,,2026-08-10
+NS-10100,preventif,Métro — Rue Royale,"195 rue Royale, Trois-Rivières, QC",Trois-Rivières,Mauricie,Polar-pop,33,NS-10100,0,,,2026-07-15
+NS-10101,preventif,CLSC Bécancour,"569 rue de l'Industrie, Bécancour, QC",Bécancour,Centre-du-Québec,Table chaude,40,NS-10101,0,,,2026-07-01
+NS-10102,preventif,CLSC — Rue Des Forges,"594 rue des Forges, Drummondville, QC",Drummondville,Centre-du-Québec,Réfrigérateur,28,NS-10102,0,,,2026-08-01
+NS-10103,preventif,Cafeteria industrielle — Rue De L'Éclipse,"383 rue de l'Éclipse, Drummondville, QC",Drummondville,Centre-du-Québec,Panini,23,NS-10103,0,,,2026-08-10
+NS-10104,preventif,Dollarama Shawinigan,"903 boulevard Royal, Shawinigan, QC",Shawinigan,Mauricie,Réfrigérateur,28,NS-10104,0,,,2026-07-01
+NS-10105,preventif,Brûlerie locale — Rue Notre-Dame,"1761 rue Notre-Dame, Nicolet, QC",Nicolet,Centre-du-Québec,ADMIN,37,NS-10105,0,,,2026-07-01
+NS-10106,preventif,Métro — Rue Du Portage,"1747 rue du Portage, Nicolet, QC",Nicolet,Centre-du-Québec,Réchaud,3,NS-10106,0,,,2026-08-10
+NS-10107,preventif,McDonald's Sorel-Tracy,"1154 boulevard Fiset, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Distributrice,25,NS-10107,0,,,2026-07-01
+NS-10108,preventif,Hôtel Le Dauphin — Boulevard Louis-Fréchette,"774 boulevard Louis-Fréchette, Nicolet, QC",Nicolet,Centre-du-Québec,Réchaud,3,NS-10108,0,,,2026-08-10
+NS-10109,preventif,CLSC — 3E Rue,"1551 3e Rue, Shawinigan, QC",Shawinigan,Mauricie,Distributrice,25,NS-10109,0,,,2026-07-15
+NS-10110,preventif,La Belle Province — Boulevard Frontenac,"618 boulevard Frontenac, Thetford Mines, QC",Thetford Mines,Chaudière-Appalaches,Four Micro-onde,13,NS-10110,0,,,2026-08-01
+NS-10111,preventif,Dollarama Bécancour,"204 boulevard Bécancour, Bécancour, QC",Bécancour,Centre-du-Québec,Thermos,19,NS-10111,0,,,2026-08-10
+NS-10112,preventif,Subway — Boulevard Bécancour,"261 boulevard Bécancour, Bécancour, QC",Bécancour,Centre-du-Québec,CT CUR-GEM3IF,32,NS-10112,0,,,2026-07-15
+NS-10113,preventif,Restaurant du Parc Sherbrooke,"1072 rue Wellington Nord, Sherbrooke, QC",Sherbrooke,Estrie,Site,1,NS-10113,0,,,2026-08-01
+NS-10114,preventif,A&W — Rue Heriot,"1556 rue Heriot, Drummondville, QC",Drummondville,Centre-du-Québec,Réchaud,3,NS-10114,0,,,2026-08-10
+NS-10115,preventif,Métro Shawinigan,"1838 avenue de la Station, Shawinigan, QC",Shawinigan,Mauricie,Moulin,17,NS-10115,0,,,2026-07-15
+NS-10116,preventif,Aréna municipal Sherbrooke,"1889 boulevard de Portland, Sherbrooke, QC",Sherbrooke,Estrie,Roller Grill,4,NS-10116,0,,,2026-07-15
+NS-10117,preventif,Hôtel Le Dauphin Nicolet,"1413 rue Notre-Dame, Nicolet, QC",Nicolet,Centre-du-Québec,Moulin,17,NS-10117,0,,,2026-08-01
+NS-10118,preventif,Couche-Tard Drummondville,"591 boulevard Saint-Joseph, Drummondville, QC",Drummondville,Centre-du-Québec,Cappuccino Glacé,16,NS-10118,0,,,2026-08-10
+NS-10119,preventif,Aréna municipal — Rue Des Forges,"1431 rue des Forges, Trois-Rivières, QC",Trois-Rivières,Mauricie,Distributeur à eau chaude,22,NS-10119,0,,,2026-08-10
+NS-10120,preventif,CLSC Sherbrooke,"873 rue King Est, Sherbrooke, QC",Sherbrooke,Estrie,Espresso,2,NS-10120,0,,,2026-08-01
+NS-10121,preventif,Hôtel Le Dauphin — 9E Rue Sud,"1357 9e Rue Sud, Thetford Mines, QC",Thetford Mines,Chaudière-Appalaches,Lassonde,39,NS-10121,0,,,2026-08-01
+NS-10122,preventif,Brûlerie locale — Boulevard Des Bois-Francs,"25 boulevard des Bois-Francs, Victoriaville, QC",Victoriaville,Centre-du-Québec,Slush,42,NS-10122,0,,,2026-08-10
+NS-10123,preventif,McDonald's — Rue Merry Nord,"1686 rue Merry Nord, Magog, QC",Magog,Estrie,Boissons en fontaine,27,NS-10123,0,,,2026-08-01
+NS-10124,preventif,Subway Thetford Mines,"205 boulevard Frontenac, Thetford Mines, QC",Thetford Mines,Chaudière-Appalaches,Distributeur à sucre,20,NS-10124,0,,,2026-07-15
+NS-10125,preventif,Couche-Tard Nicolet,"1321 rue Notre-Dame, Nicolet, QC",Nicolet,Centre-du-Québec,BW3 Désinstallé,38,NS-10125,0,,,2026-07-01
+NS-10126,preventif,A&W Nicolet,"130 boulevard Louis-Fréchette, Nicolet, QC",Nicolet,Centre-du-Québec,K-Cup,24,NS-10126,0,,,2026-07-15
+NS-10127,preventif,CLSC Thetford Mines,"379 9e Rue Sud, Thetford Mines, QC",Thetford Mines,Chaudière-Appalaches,Machine à Glace,15,NS-10127,0,,,2026-08-10
+NS-10128,preventif,IGA Extra Drummondville,"232 rue Cockburn, Drummondville, QC",Drummondville,Centre-du-Québec,Thermos,19,NS-10128,0,,,2026-07-01
+NS-10129,preventif,Tim Hortons Drummondville,"991 rue Heriot, Drummondville, QC",Drummondville,Centre-du-Québec,Panini,23,NS-10129,0,,,2026-08-10
+NS-10130,preventif,Brûlerie locale Victoriaville,"615 boulevard Jutras, Victoriaville, QC",Victoriaville,Centre-du-Québec,Distributeur à sucre,20,NS-10130,0,,,2026-07-01
+NS-10131,preventif,École secondaire Sorel-Tracy,"507 boulevard Fiset, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Four à Convection,14,NS-10131,0,,,2026-07-01
+NS-10132,preventif,Harvey's — Avenue Des Érables,"1156 avenue des Érables, Bécancour, QC",Bécancour,Centre-du-Québec,Réfrigérateur,28,NS-10132,0,,,2026-07-01
+NS-10133,preventif,Couche-Tard Bécancour,"557 avenue des Érables, Bécancour, QC",Bécancour,Centre-du-Québec,Four Micro-onde,13,NS-10133,0,,,2026-08-10
+NS-10134,preventif,Couche-Tard Nicolet,"144 rue du Portage, Nicolet, QC",Nicolet,Centre-du-Québec,Four Micro-onde,13,NS-10134,0,,,2026-08-10
+NS-10135,preventif,Couche-Tard — Rue De L'Aqueduc,"768 rue de l'Aqueduc, Victoriaville, QC",Victoriaville,Centre-du-Québec,Distributeur lait/crème,8,NS-10135,0,,,2026-07-15
+NS-10136,preventif,CLSC Sorel-Tracy,"133 boulevard Fiset, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Boissons en fontaine,27,NS-10136,0,,,2026-07-01
+NS-10137,preventif,Cafeteria industrielle Bécancour,"1329 boulevard Bécancour, Bécancour, QC",Bécancour,Centre-du-Québec,Panini,23,NS-10137,0,,,2026-07-01
+NS-10138,preventif,Benny&Co — Boulevard Bécancour,"601 boulevard Bécancour, Bécancour, QC",Bécancour,Centre-du-Québec,Boissons en fontaine,27,NS-10138,0,,,2026-07-01
+NS-10139,preventif,Aréna municipal Sherbrooke,"551 12e Avenue Nord, Sherbrooke, QC",Sherbrooke,Estrie,Distributeur lait/crème,8,NS-10139,0,,,2026-08-10
+NS-10140,preventif,Starbucks Sherbrooke,"1252 rue King Est, Sherbrooke, QC",Sherbrooke,Estrie,Roller Grill,4,NS-10140,0,,,2026-08-01
+NS-10141,preventif,McDonald's — Rue Cockburn,"1632 rue Cockburn, Drummondville, QC",Drummondville,Centre-du-Québec,Slush,42,NS-10141,0,,,2026-08-10
+NS-10142,preventif,Tim Hortons Trois-Rivières,"193 rue des Forges, Trois-Rivières, QC",Trois-Rivières,Mauricie,Distributeur à sucre,20,NS-10142,0,,,2026-08-01
+NS-10143,preventif,Tim Hortons Thetford Mines,"1108 rue Notre-Dame Est, Thetford Mines, QC",Thetford Mines,Chaudière-Appalaches,Four Micro-onde,13,NS-10143,0,,,2026-08-01
+NS-10144,preventif,Couche-Tard Nicolet,"906 rue Notre-Dame, Nicolet, QC",Nicolet,Centre-du-Québec,KIT ENTRETIEN,34,NS-10144,0,,,2026-07-15
+NS-10145,preventif,École secondaire Shawinigan,"903 avenue de la Station, Shawinigan, QC",Shawinigan,Mauricie,Thermos,19,NS-10145,0,,,2026-08-01
+NS-10146,preventif,Hôtel Le Dauphin — Boulevard Royal,"1868 boulevard Royal, Shawinigan, QC",Shawinigan,Mauricie,Café filtre,5,NS-10146,0,,,2026-07-15
+NS-10147,preventif,Cafeteria industrielle Sherbrooke,"629 rue King Ouest, Sherbrooke, QC",Sherbrooke,Estrie,CT CUR-GEM3IF,32,NS-10147,0,,,2026-08-01
+NS-10148,preventif,A&W — 9E Rue Sud,"1315 9e Rue Sud, Thetford Mines, QC",Thetford Mines,Chaudière-Appalaches,Boissons en fontaine,27,NS-10148,0,,,2026-07-15
+NS-10149,preventif,Dollarama — Rue Notre-Dame,"1610 rue Notre-Dame, Nicolet, QC",Nicolet,Centre-du-Québec,Thé,21,NS-10149,0,,,2026-08-10
+NS-10150,preventif,Cafeteria industrielle Nicolet,"1325 boulevard Louis-Fréchette, Nicolet, QC",Nicolet,Centre-du-Québec,Frigo à Condiments,18,NS-10150,0,,,2026-07-01
+NS-10151,preventif,Benny&Co — Rue Heriot,"911 rue Heriot, Drummondville, QC",Drummondville,Centre-du-Québec,Grille-Pain,11,NS-10151,0,,,2026-07-15
+NS-10152,preventif,Hôtel Le Dauphin — Boulevard Louis-Fréchette,"359 boulevard Louis-Fréchette, Nicolet, QC",Nicolet,Centre-du-Québec,Lassonde,39,NS-10152,0,,,2026-08-01
+NS-10153,preventif,Aréna municipal Drummondville,"1191 rue Brock, Drummondville, QC",Drummondville,Centre-du-Québec,Distributeur à eau chaude,22,NS-10153,0,,,2026-08-10
+NS-10154,preventif,Harvey's — Rue Marchand,"807 rue Marchand, Drummondville, QC",Drummondville,Centre-du-Québec,Polar-pop,33,NS-10154,0,,,2026-07-15
+NS-10155,preventif,McDonald's Thetford Mines,"1712 boulevard Frontenac, Thetford Mines, QC",Thetford Mines,Chaudière-Appalaches,ADMIN,37,NS-10155,0,,,2026-08-01
+NS-10156,preventif,Restaurant du Parc — Rue De L'Industrie,"1100 rue de l'Industrie, Bécancour, QC",Bécancour,Centre-du-Québec,Distributeur à sucre,20,NS-10156,0,,,2026-07-15
+NS-10157,preventif,IGA Extra Magog,"488 rue Principale Ouest, Magog, QC",Magog,Estrie,Moulin,17,NS-10157,0,,,2026-08-10
+NS-10158,preventif,Harvey's — Rue Heriot,"1152 rue Heriot, Drummondville, QC",Drummondville,Centre-du-Québec,Refroidisseur,31,NS-10158,0,,,2026-08-01
+NS-10159,preventif,CLSC Nicolet,"1169 rue Notre-Dame, Nicolet, QC",Nicolet,Centre-du-Québec,KIT ENTRETIEN,34,NS-10159,0,,,2026-07-01
+NS-10160,preventif,Métro — Rue Du Portage,"180 rue du Portage, Nicolet, QC",Nicolet,Centre-du-Québec,Café filtre,5,NS-10160,0,,,2026-08-10
+NS-10161,preventif,Couche-Tard Magog,"936 rue Merry Nord, Magog, QC",Magog,Estrie,Réchaud,3,NS-10161,0,,,2026-07-15
+NS-10162,preventif,Benny&Co Magog,"921 rue Merry Nord, Magog, QC",Magog,Estrie,KIT ENTRETIEN,34,NS-10162,0,,,2026-08-01
+NS-10163,preventif,Subway Nicolet,"762 boulevard Louis-Fréchette, Nicolet, QC",Nicolet,Centre-du-Québec,Distributeur lait/crème,8,NS-10163,0,,,2026-07-15
+NS-10164,preventif,Dollarama Nicolet,"377 boulevard Louis-Fréchette, Nicolet, QC",Nicolet,Centre-du-Québec,Grille-Pain,11,NS-10164,0,,,2026-08-10
+NS-10165,preventif,Starbucks — Rue De L'Aqueduc,"641 rue de l'Aqueduc, Victoriaville, QC",Victoriaville,Centre-du-Québec,Accessoire TP,30,NS-10165,0,,,2026-07-01
+NS-10166,preventif,A&W — Rue Principale Ouest,"1490 rue Principale Ouest, Magog, QC",Magog,Estrie,Café filtre,5,NS-10166,0,,,2026-08-10
+NS-10167,preventif,Subway Shawinigan,"985 avenue de la Station, Shawinigan, QC",Shawinigan,Mauricie,Site,1,NS-10167,0,,,2026-07-15
+NS-10168,preventif,Subway Bécancour,"1877 avenue des Érables, Bécancour, QC",Bécancour,Centre-du-Québec,Slush,42,NS-10168,0,,,2026-07-01
+NS-10169,preventif,Harvey's Drummondville,"1345 rue de l'Éclipse, Drummondville, QC",Drummondville,Centre-du-Québec,Filtration d'eau,6,NS-10169,0,,,2026-08-10
+NS-10170,preventif,Harvey's — Rue Brock,"516 rue Brock, Drummondville, QC",Drummondville,Centre-du-Québec,Hotte,10,NS-10170,0,,,2026-08-10
+NS-10171,preventif,McDonald's — Rue Du Prince,"884 rue du Prince, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Café filtre,5,NS-10171,0,,,2026-07-01
+NS-10172,preventif,CLSC — Rue De L'Aqueduc,"1593 rue de l'Aqueduc, Victoriaville, QC",Victoriaville,Centre-du-Québec,Filtration d'eau,6,NS-10172,0,,,2026-07-15
+NS-10173,preventif,Dépanneur 7 jours Drummondville,"1811 rue de l'Éclipse, Drummondville, QC",Drummondville,Centre-du-Québec,Four Combi,9,NS-10173,0,,,2026-08-01
+NS-10174,preventif,Tim Hortons Shawinigan,"920 avenue de la Station, Shawinigan, QC",Shawinigan,Mauricie,Distributeur lait/crème,8,NS-10174,0,,,2026-07-15
+NS-10175,preventif,Couche-Tard Thetford Mines,"833 rue Notre-Dame Est, Thetford Mines, QC",Thetford Mines,Chaudière-Appalaches,Distributeur à sucre,20,NS-10175,0,,,2026-07-01
+NS-10176,preventif,Brûlerie locale Drummondville,"575 rue de l'Éclipse, Drummondville, QC",Drummondville,Centre-du-Québec,Boissons en fontaine,27,NS-10176,0,,,2026-07-15
+NS-10177,preventif,Aréna municipal Nicolet,"188 rue Notre-Dame, Nicolet, QC",Nicolet,Centre-du-Québec,ADMIN,37,NS-10177,0,,,2026-08-10
+NS-10178,preventif,Benny&Co — Boulevard Louis-Fréchette,"509 boulevard Louis-Fréchette, Nicolet, QC",Nicolet,Centre-du-Québec,Filtration d'eau,6,NS-10178,0,,,2026-08-01
+NS-10179,preventif,CLSC — Rue Notre-Dame,"273 rue Notre-Dame, Victoriaville, QC",Victoriaville,Centre-du-Québec,CT CUR-GEM3IF,32,NS-10179,0,,,2026-08-01
+NS-10180,preventif,Métro Nicolet,"1655 rue du Portage, Nicolet, QC",Nicolet,Centre-du-Québec,Slush,42,NS-10180,0,,,2026-07-01
+NS-10181,preventif,Tim Hortons — Rue Lindsay,"457 rue Lindsay, Drummondville, QC",Drummondville,Centre-du-Québec,Distributrice,25,NS-10181,0,,,2026-08-10
+NS-10182,preventif,Métro — Boulevard Des Chenaux,"1582 boulevard des Chenaux, Trois-Rivières, QC",Trois-Rivières,Mauricie,Cappuccino Glacé,16,NS-10182,0,,,2026-08-10
+NS-10183,preventif,Restaurant du Parc Magog,"1553 rue Principale Ouest, Magog, QC",Magog,Estrie,ADMIN,37,NS-10183,0,,,2026-07-15
+NS-10184,preventif,A&W Thetford Mines,"1088 rue Notre-Dame Est, Thetford Mines, QC",Thetford Mines,Chaudière-Appalaches,Lassonde,39,NS-10184,0,,,2026-08-10
+NS-10185,preventif,Dollarama Nicolet,"85 rue du Portage, Nicolet, QC",Nicolet,Centre-du-Québec,Accessoire TP,30,NS-10185,0,,,2026-08-10
+NS-10186,preventif,CLSC Bécancour,"846 avenue des Érables, Bécancour, QC",Bécancour,Centre-du-Québec,Refroidisseur,31,NS-10186,0,,,2026-08-10
+NS-10187,preventif,IGA Extra — Boulevard Jutras,"463 boulevard Jutras, Victoriaville, QC",Victoriaville,Centre-du-Québec,Site,1,NS-10187,0,,,2026-07-01
+NS-10188,preventif,Restaurant du Parc Bécancour,"974 rue de l'Industrie, Bécancour, QC",Bécancour,Centre-du-Québec,Slush,42,NS-10188,0,,,2026-08-10
+NS-10189,preventif,Harvey's Bécancour,"1607 boulevard Bécancour, Bécancour, QC",Bécancour,Centre-du-Québec,Lassonde,39,NS-10189,0,,,2026-08-10
+NS-10190,preventif,CLSC — Rue Notre-Dame,"1258 rue Notre-Dame, Victoriaville, QC",Victoriaville,Centre-du-Québec,Slush,42,NS-10190,0,,,2026-08-10
+NS-10191,preventif,Benny&Co — Boulevard Frontenac,"120 boulevard Frontenac, Thetford Mines, QC",Thetford Mines,Chaudière-Appalaches,Grille-Pain,11,NS-10191,0,,,2026-07-15
+NS-10192,preventif,Harvey's Drummondville,"355 rue Power, Drummondville, QC",Drummondville,Centre-du-Québec,Refroidisseur,31,NS-10192,0,,,2026-07-01
+NS-10193,preventif,Hôtel Le Dauphin — Rue Cockburn,"182 rue Cockburn, Drummondville, QC",Drummondville,Centre-du-Québec,Cappuccino Glacé,16,NS-10193,0,,,2026-08-01
+NS-10194,preventif,Brûlerie locale — Rue Principale Ouest,"1144 rue Principale Ouest, Magog, QC",Magog,Estrie,Refroidisseur,31,NS-10194,0,,,2026-07-01
+NS-10195,preventif,Harvey's Drummondville,"1231 rue Power, Drummondville, QC",Drummondville,Centre-du-Québec,Thé,21,NS-10195,0,,,2026-07-01
+NS-10196,preventif,Hôtel Le Dauphin — Boulevard Royal,"1739 boulevard Royal, Shawinigan, QC",Shawinigan,Mauricie,Café filtre,5,NS-10196,0,,,2026-07-15
+NS-10197,preventif,A&W Sorel-Tracy,"901 rue Augusta, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Frigo à Condiments,18,NS-10197,0,,,2026-08-01
+NS-10198,preventif,Harvey's Trois-Rivières,"632 rue Royale, Trois-Rivières, QC",Trois-Rivières,Mauricie,Accessoire TP,30,NS-10198,0,,,2026-08-01
+NS-10199,preventif,IGA Extra — Rue De L'Industrie,"1663 rue de l'Industrie, Bécancour, QC",Bécancour,Centre-du-Québec,Moulin,17,NS-10199,0,,,2026-08-01
+NS-10200,preventif,Harvey's Bécancour,"1249 rue de l'Industrie, Bécancour, QC",Bécancour,Centre-du-Québec,ADMIN,37,NS-10200,0,,,2026-07-01
+NS-10201,preventif,Subway Victoriaville,"610 rue Laurier, Victoriaville, QC",Victoriaville,Centre-du-Québec,Distributeur lait/crème,8,NS-10201,0,,,2026-07-01
+NS-10202,preventif,Restaurant du Parc Sherbrooke,"1845 12e Avenue Nord, Sherbrooke, QC",Sherbrooke,Estrie,K-Cup,24,NS-10202,0,,,2026-07-01
+NS-10203,preventif,Subway — Rue De L'Aqueduc,"925 rue de l'Aqueduc, Victoriaville, QC",Victoriaville,Centre-du-Québec,PopCorn,12,NS-10203,0,,,2026-08-10
+NS-10204,preventif,Dépanneur 7 jours Drummondville,"1603 rue Heriot, Drummondville, QC",Drummondville,Centre-du-Québec,Refroidisseur,31,NS-10204,0,,,2026-08-01
+NS-10205,preventif,McDonald's Magog,"1010 rue Principale Ouest, Magog, QC",Magog,Estrie,Lassonde,39,NS-10205,0,,,2026-08-10
+NS-10206,preventif,Harvey's — Avenue De La Station,"1180 avenue de la Station, Shawinigan, QC",Shawinigan,Mauricie,Distributeur à sucre,20,NS-10206,0,,,2026-08-01
+NS-10207,preventif,McDonald's — Rue Du Portage,"1447 rue du Portage, Nicolet, QC",Nicolet,Centre-du-Québec,Filtration d'eau,6,NS-10207,0,,,2026-07-15
+NS-10208,preventif,Métro — Boulevard Louis-Fréchette,"1504 boulevard Louis-Fréchette, Nicolet, QC",Nicolet,Centre-du-Québec,Réfrigérateur,28,NS-10208,0,,,2026-07-15
+NS-10209,preventif,Subway — Boulevard Des Récollets,"961 boulevard des Récollets, Trois-Rivières, QC",Trois-Rivières,Mauricie,Réfrigérateur,28,NS-10209,0,,,2026-08-10
+NS-10210,preventif,Harvey's — 9E Rue Sud,"1556 9e Rue Sud, Thetford Mines, QC",Thetford Mines,Chaudière-Appalaches,Distributrice,25,NS-10210,0,,,2026-08-10
+NS-10211,preventif,Subway — Rue Notre-Dame Est,"1387 rue Notre-Dame Est, Thetford Mines, QC",Thetford Mines,Chaudière-Appalaches,Four Combi,9,NS-10211,0,,,2026-07-15
+NS-10212,preventif,Cafeteria industrielle — Rue Du Prince,"1460 rue du Prince, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Hotte,10,NS-10212,0,,,2026-07-01
+NS-10213,preventif,A&W — Rue Merry Nord,"1345 rue Merry Nord, Magog, QC",Magog,Estrie,Four à Convection,14,NS-10213,0,,,2026-08-01
+NS-10214,preventif,Starbucks — Boulevard Bécancour,"1236 boulevard Bécancour, Bécancour, QC",Bécancour,Centre-du-Québec,Réchaud,3,NS-10214,0,,,2026-08-10
+NS-10215,preventif,IGA Extra Sorel-Tracy,"1826 rue Augusta, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Espresso,2,NS-10215,0,,,2026-08-10
+NS-10216,preventif,Benny&Co Sorel-Tracy,"1886 rue Augusta, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Table chaude,40,NS-10216,0,,,2026-08-01
+NS-10217,preventif,Harvey's — Rue Principale Ouest,"1720 rue Principale Ouest, Magog, QC",Magog,Estrie,Thermos,19,NS-10217,0,,,2026-08-01
+NS-10218,preventif,Métro Sorel-Tracy,"1357 rue du Prince, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Café filtre,5,NS-10218,0,,,2026-07-01
+NS-10219,preventif,IGA Extra Trois-Rivières,"544 boulevard des Récollets, Trois-Rivières, QC",Trois-Rivières,Mauricie,Polar-pop,33,NS-10219,0,,,2026-07-15
+NS-10220,preventif,La Belle Province Bécancour,"1323 rue de l'Industrie, Bécancour, QC",Bécancour,Centre-du-Québec,Thermos,19,NS-10220,0,,,2026-08-10
+NS-10221,preventif,McDonald's Magog,"823 rue Merry Nord, Magog, QC",Magog,Estrie,Cappuccino Glacé,16,NS-10221,0,,,2026-08-10
+NS-10222,preventif,Aréna municipal — Rue Notre-Dame Est,"974 rue Notre-Dame Est, Thetford Mines, QC",Thetford Mines,Chaudière-Appalaches,Panini,23,NS-10222,0,,,2026-08-10
+NS-10223,preventif,Dépanneur 7 jours — Boulevard Bécancour,"249 boulevard Bécancour, Bécancour, QC",Bécancour,Centre-du-Québec,Distributeur à eau chaude,22,NS-10223,0,,,2026-07-15
+NS-10224,preventif,Dollarama — Rue Royale,"204 rue Royale, Trois-Rivières, QC",Trois-Rivières,Mauricie,Moulin,17,NS-10224,0,,,2026-07-01
+NS-10225,preventif,Dollarama Trois-Rivières,"737 boulevard des Chenaux, Trois-Rivières, QC",Trois-Rivières,Mauricie,BW3 Désinstallé,38,NS-10225,0,,,2026-07-01

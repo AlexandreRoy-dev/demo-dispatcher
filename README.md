@@ -4,6 +4,8 @@ Prospect demo: a dispatcher enters the day’s call addresses for **one fictiona
 
 Live URL (after deploy): [https://dispatch.codesurmesure.ca](https://dispatch.codesurmesure.ca)
 
+Guertech dispatch prototype: [https://dispatch.codesurmesure.ca/guertech](https://dispatch.codesurmesure.ca/guertech) (`/guertech`). Jordan Hale demo stays at `/`.
+
 ## Features
 
 - Single-tech day form (start / depot, stops, optional end)

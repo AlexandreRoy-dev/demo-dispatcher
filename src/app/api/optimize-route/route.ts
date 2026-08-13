@@ -108,6 +108,7 @@ export async function POST(request: Request) {
   const start = body.start?.trim();
   const stops = normalizeStops(body.stops);
   const end = body.end?.trim() || start;
+  const shouldOptimize = body.optimize !== false;
 
   if (!start) {
     return NextResponse.json(
@@ -130,10 +131,18 @@ export async function POST(request: Request) {
     );
   }
 
-  // Traffic-aware optimization: Google disallows optimizeWaypointOrder
-  // with TRAFFIC_AWARE_OPTIMAL, so use TRAFFIC_AWARE (still live traffic).
+  // Traffic-aware: Google disallows optimizeWaypointOrder with
+  // TRAFFIC_AWARE_OPTIMAL, so use TRAFFIC_AWARE (still live traffic).
   // departureTime must be in the future (clock skew / request latency).
-  const departureTime = new Date(Date.now() + 2 * 60_000).toISOString();
+  const parsedDeparture = body.departureTime
+    ? Date.parse(body.departureTime)
+    : Number.NaN;
+  const minDeparture = Date.now() + 2 * 60_000;
+  const departureTime = new Date(
+    Number.isFinite(parsedDeparture)
+      ? Math.max(parsedDeparture, minDeparture)
+      : minDeparture,
+  ).toISOString();
 
   const routesBody = {
     origin: { address: start },
@@ -141,7 +150,7 @@ export async function POST(request: Request) {
     intermediates: stops.map((stop) => ({ address: stop.address })),
     travelMode: "DRIVE",
     routingPreference: "TRAFFIC_AWARE",
-    optimizeWaypointOrder: true,
+    optimizeWaypointOrder: shouldOptimize,
     departureTime,
     languageCode: "fr-CA",
     regionCode: "CA",
@@ -214,8 +223,9 @@ export async function POST(request: Request) {
     );
   }
 
-  const rawOrder =
-    route.optimizedIntermediateWaypointIndex ?? stops.map((_, i) => i);
+  const rawOrder = shouldOptimize
+    ? (route.optimizedIntermediateWaypointIndex ?? stops.map((_, i) => i))
+    : stops.map((_, i) => i);
   const waypointOrder = rawOrder.map((index, fallback) =>
     Number.isInteger(index) && index >= 0 && index < stops.length
       ? index
