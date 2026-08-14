@@ -16,6 +16,7 @@ import {
   SLA,
 } from "@/lib/guertech/constants";
 import { loadAppels } from "@/lib/guertech/csv";
+import { onSiteMinutes } from "@/lib/guertech/assign";
 import {
   evaluateRoadWindow,
   mergePinnedOptimal,
@@ -174,6 +175,9 @@ function Workspace() {
     () => new Set(),
   );
   const [suggestionReady, setSuggestionReady] = useState(false);
+  const [refusedSuggestionIds, setRefusedSuggestionIds] = useState<Set<string>>(
+    () => new Set(),
+  );
   const [techPanelOpen, setTechPanelOpen] = useState(false);
   const resultsRef = useRef<HTMLDivElement>(null);
 
@@ -237,10 +241,6 @@ function Workspace() {
     [calls, effectiveDate],
   );
 
-  const missingPlannedTime = calls.filter(
-    (item) => item.planifie && !item.heure,
-  );
-
   const preventifSuggestions = useMemo(() => {
     if (!displayRoutes.some((route) => route.stops.length > 0)) return [];
     const assignedIds = new Set(
@@ -252,7 +252,8 @@ function Workspace() {
       (appel) =>
         appel.type === "preventif" &&
         !appel.planifie &&
-        !assignedIds.has(appel.id),
+        !assignedIds.has(appel.id) &&
+        !refusedSuggestionIds.has(appel.id),
     );
     return suggestPreventifs({
       routes: displayRoutes,
@@ -260,13 +261,136 @@ function Workspace() {
       durations,
       maxPerTech: 6,
     });
-  }, [displayRoutes, calls, durations]);
+  }, [displayRoutes, calls, durations, refusedSuggestionIds]);
 
-  const updateCall = useCallback((id: string, patch: Partial<Appel>) => {
-    setCalls((current) =>
-      current.map((item) => (item.id === id ? { ...item, ...patch } : item)),
-    );
-  }, []);
+  const calendarAppelIds = useMemo(() => {
+    const ids = new Set<string>();
+    for (const route of displayRoutes) {
+      for (const stop of route.stops) ids.add(stop.appel.id);
+    }
+    return ids;
+  }, [displayRoutes]);
+
+  const syncPlannedPin = useCallback(
+    async (appel: Appel) => {
+      const baseRoutes =
+        routes && routes.length > 0
+          ? routes
+          : emptyRoutes.length > 0
+            ? emptyRoutes
+            : null;
+      if (!baseRoutes) return;
+
+      // Remove from calendar when unplanned or missing time
+      if (!appel.planifie || !appel.heure) {
+        if (!routes) return;
+        const has = routes.some((route) =>
+          route.stops.some((stop) => stop.appel.id === appel.id),
+        );
+        if (!has) return;
+        const nextRoutes = await Promise.all(
+          routes.map(async (route) => {
+            const nextStops = route.stops.filter(
+              (stop) => stop.appel.id !== appel.id,
+            );
+            if (nextStops.length === route.stops.length) return route;
+            if (nextStops.length === 0) {
+              return {
+                tech: route.tech,
+                stops: [],
+                google: null,
+                error: null,
+              };
+            }
+            return buildTechRoute(route.tech, nextStops);
+          }),
+        );
+        setRoutes(nextRoutes);
+        setOvertimeWarnings(evaluateRoadWindow(nextRoutes));
+        return;
+      }
+
+      const techId =
+        appel.techId || techs.find((tech) => tech.present)?.id || "";
+      if (!techId) return;
+      const rosterTech = techs.find((tech) => tech.id === techId);
+      if (!rosterTech?.present) return;
+
+      const tech: Tech = {
+        ...rosterTech,
+        startHour: rosterTech.startHour || ROAD_WINDOW.start,
+        endHour: rosterTech.endHour || ROAD_WINDOW.softEnd,
+        start: rosterTech.start || DRUMMONDVILLE_HQ,
+        end: rosterTech.end || rosterTech.start || DRUMMONDVILLE_HQ,
+        skills:
+          rosterTech.skills && rosterTech.skills.length > 0
+            ? rosterTech.skills
+            : [...ALL_SKILL_IDS],
+      };
+
+      setAcceptingId(appel.id);
+      try {
+        let nextRoutes = baseRoutes.map((route) => ({
+          ...route,
+          stops: route.stops.filter((stop) => stop.appel.id !== appel.id),
+        }));
+        if (!nextRoutes.some((route) => route.tech.id === techId)) {
+          nextRoutes = [
+            ...nextRoutes,
+            { tech, stops: [], google: null, error: null },
+          ];
+        }
+
+        const target = nextRoutes.find((route) => route.tech.id === techId);
+        if (!target) return;
+
+        const newStop: DayStop = {
+          appel: { ...appel, planifie: true, heure: appel.heure, techId },
+          minutesOnSite: onSiteMinutes(appel.type, durations),
+          pinned: true,
+        };
+        const rebuilt = await buildTechRoute(
+          { ...target.tech, ...tech },
+          [...target.stops, newStop],
+        );
+        nextRoutes = nextRoutes.map((route) =>
+          route.tech.id === techId ? rebuilt : route,
+        );
+        setRoutes(nextRoutes);
+        setUnassigned((current) =>
+          current.filter((item) => item.appel.id !== appel.id),
+        );
+        setOvertimeWarnings(evaluateRoadWindow(nextRoutes));
+        setToast(
+          `${appel.magasin} → calendrier · ${tech.name} · ${appel.heure}`,
+        );
+      } finally {
+        setAcceptingId(null);
+      }
+    },
+    [routes, emptyRoutes, techs, durations],
+  );
+
+  const updateCall = useCallback(
+    (id: string, patch: Partial<Appel>) => {
+      setCalls((current) => {
+        const nextCalls = current.map((item) =>
+          item.id === id ? { ...item, ...patch } : item,
+        );
+        const updated = nextCalls.find((item) => item.id === id);
+        if (
+          updated &&
+          ("planifie" in patch || "heure" in patch || "techId" in patch)
+        ) {
+          window.queueMicrotask(() => {
+            void syncPlannedPin(updated);
+          });
+        }
+        return nextCalls;
+      });
+    },
+    [syncPlannedPin],
+  );
 
   const updateTech = useCallback((id: string, patch: Partial<Tech>) => {
     if ("present" in patch) {
@@ -293,8 +417,9 @@ function Workspace() {
     ]);
   }, [techs.length]);
 
-  function applySuggestion() {
+  async function applySuggestion() {
     setError(null);
+    setToast(null);
     if (calls.length === 0) {
       setError("Liste d'appels encore vide — attendez le chargement du CSV.");
       return;
@@ -324,9 +449,21 @@ function Workspace() {
     setTechs(result.techs);
     setCalls(result.calls);
     setSuggestionReady(true);
-    setToast(
-      `Suggestion appliquée (champs vides seulement) : ${result.summary.join(" · ")}`,
-    );
+
+    await rebuildDay({
+      workingCalls: result.calls,
+      workingTechs: result.techs,
+      planDate: result.date,
+      quota:
+        Number(result.pmQuota) ||
+        Math.ceil(preventifPerBusinessDay(result.date)),
+      durations: parseDurations(
+        result.reactifDuration,
+        result.preventifDuration,
+      ),
+      overtimeAllowed: result.allowOvertime === true,
+      toastPrefix: `Suggestion + tournées : ${result.summary.join(" · ")}`,
+    });
   }
 
   const acceptSuggestion = useCallback(
@@ -451,6 +588,29 @@ function Workspace() {
     }
   }, [routes, acceptingId, preventifSuggestions]);
 
+  const refuseSuggestion = useCallback((suggestion: PreventifSuggestion) => {
+    setRefusedSuggestionIds((current) => {
+      const next = new Set(current);
+      next.add(suggestion.appel.id);
+      return next;
+    });
+    setToast(`Suggestion refusée — ${suggestion.appel.magasin}`);
+  }, []);
+
+  const refuseAllSuggestions = useCallback(() => {
+    if (preventifSuggestions.length === 0) return;
+    setRefusedSuggestionIds((current) => {
+      const next = new Set(current);
+      for (const suggestion of preventifSuggestions) {
+        next.add(suggestion.appel.id);
+      }
+      return next;
+    });
+    setToast(
+      `${preventifSuggestions.length} suggestion(s) refusée(s) pour aujourd’hui.`,
+    );
+  }, [preventifSuggestions]);
+
   const removeStop = useCallback(
     async (techId: string, appelId: string) => {
       if (!routes || removingId) return;
@@ -559,21 +719,35 @@ function Workspace() {
     }
   }, [routes]);
 
-  async function generate() {
+  async function rebuildDay(options?: {
+    workingCalls?: Appel[];
+    workingTechs?: Tech[];
+    planDate?: string;
+    quota?: number;
+    durations?: { preventif: number; reactif: number };
+    overtimeAllowed?: boolean;
+    toastPrefix?: string;
+  }) {
     setError(null);
-    setToast(null);
     setOvertimeIgnored(false);
     setOvertimeWarnings([]);
 
-    if (calls.length === 0) {
+    const workingCalls = options?.workingCalls ?? calls;
+    const sourceTechs = options?.workingTechs ?? techs;
+    const planDate = options?.planDate || date || todayIsoDate();
+    const overtimeAllowed =
+      options?.overtimeAllowed ?? allowOvertime === true;
+    const dayDurations = options?.durations ?? durations;
+    const quota =
+      options?.quota ??
+      (pmQuotaNumber > 0 ? pmQuotaNumber : Math.ceil(avgPreventifPerDay));
+
+    if (workingCalls.length === 0) {
       setError("Liste d'appels encore vide — attendez le chargement du CSV.");
       return;
     }
 
-    const overtimeAllowed = allowOvertime === true;
-    const planDate = date || todayIsoDate();
-    const quota = pmQuotaNumber > 0 ? pmQuotaNumber : Math.ceil(avgPreventifPerDay);
-    const readyTechs = techs.map((tech) => ({
+    const readyTechs = sourceTechs.map((tech) => ({
       ...tech,
       startHour: tech.startHour || ROAD_WINDOW.start,
       endHour: tech.endHour || ROAD_WINDOW.softEnd,
@@ -592,18 +766,17 @@ function Workspace() {
       return;
     }
 
-    // Persist filled defaults so the roster / calendar stay consistent.
     setTechs(readyTechs);
 
-    let workingCalls = calls;
-    if (missingPlannedTime.length > 0) {
-      workingCalls = calls.map((item) =>
+    let callsForDay = workingCalls;
+    const missingTime = callsForDay.filter(
+      (item) => item.planifie && !item.heure,
+    );
+    if (missingTime.length > 0) {
+      callsForDay = callsForDay.map((item) =>
         item.planifie && !item.heure ? { ...item, heure: "10:00" } : item,
       );
-      setCalls(workingCalls);
-      setToast(
-        `${missingPlannedTime.length} appel(s) planifié(s) sans heure — 10:00 appliqué automatiquement.`,
-      );
+      setCalls(callsForDay);
     }
 
     setLoading(true);
@@ -611,10 +784,10 @@ function Workspace() {
 
     try {
       const assigned = optimizeDay({
-        calls: workingCalls,
+        calls: callsForDay,
         techs: readyTechs,
         pmQuota: quota,
-        durations,
+        durations: dayDurations,
         asOfDate: planDate,
         allowOvertime: overtimeAllowed,
       });
@@ -690,20 +863,23 @@ function Workspace() {
       setOvertimeWarnings(mergedWarnings);
 
       const failed = googleRoutes.filter((route) => route.error);
+      const prefix = options?.toastPrefix
+        ? `${options.toastPrefix} — `
+        : "";
       if (failed.length > 0 && failed.length === withStops.length) {
         setError(
           `Google n'a pas renvoyé de routes (${failed[0]?.error}). Le calendrier affiche quand même l'horaire estimé.`,
         );
       } else if (mergedWarnings.length > 0 && !overtimeAllowed) {
         setToast(
-          `Tournées générées — ${mergedWarnings.length} tech(s) dépassent ${ROAD_WINDOW.softEndLabel}.`,
+          `${prefix}Calendrier à jour — ${mergedWarnings.length} tech(s) dépassent ${ROAD_WINDOW.softEndLabel}.`,
         );
       } else if (failed.length > 0) {
         setToast(
-          `${failed.length} tournée(s) sans trafic Google — horaires estimés affichés.`,
+          `${prefix}${failed.length} tournée(s) sans trafic Google — horaires estimés.`,
         );
       } else {
-        setToast("Tournées optimisées — calendrier mis à jour.");
+        setToast(`${prefix}Calendrier et trajets Google mis à jour.`);
       }
     } catch (err) {
       setError(
@@ -780,19 +956,11 @@ function Workspace() {
         </button>
         <button
           type="button"
-          className="gt-btn-ghost"
-          onClick={applySuggestion}
-          disabled={loading || calls.length === 0}
-        >
-          Générer une suggestion
-        </button>
-        <button
-          type="button"
           className="gt-btn"
-          onClick={generate}
+          onClick={() => void applySuggestion()}
           disabled={loading || calls.length === 0}
         >
-          {loading ? progress || "Génération…" : "Générer les routes"}
+          {loading ? progress || "Optimisation…" : "Générer une suggestion"}
         </button>
       </div>
 
@@ -814,6 +982,7 @@ function Workspace() {
               onPlannedOnly={setPlannedOnly}
               onSearch={setSearch}
               onUpdate={updateCall}
+              onCalendarIds={calendarAppelIds}
             />
           </aside>
           <div className="gt-split-calendar">
@@ -821,7 +990,9 @@ function Workspace() {
               routes={displayRoutes}
               suggestions={preventifSuggestions}
               onAcceptSuggestion={acceptSuggestion}
+              onRefuseSuggestion={refuseSuggestion}
               onAcceptAllSuggestions={acceptAllSuggestions}
+              onRefuseAllSuggestions={refuseAllSuggestions}
               acceptingId={acceptingId}
               overtimeWarnings={overtimeWarnings}
               overtimeIgnored={overtimeIgnored || allowOvertime === true}
@@ -833,7 +1004,7 @@ function Workspace() {
               emptyHint={
                 routes
                   ? undefined
-                  : "Calendrier prêt — générez les routes pour remplir les colonnes."
+                  : "Mode calendrier actif — Planifié ajoute l’arrêt tout de suite. Suggestion remplit le reste."
               }
             />
           </div>
@@ -851,6 +1022,7 @@ function Workspace() {
             onPlannedOnly={setPlannedOnly}
             onSearch={setSearch}
             onUpdate={updateCall}
+            onCalendarIds={calendarAppelIds}
           />
           <p className="gt-section-empty">
             Aucun technicien présent — ouvrez le panneau Techniciens.

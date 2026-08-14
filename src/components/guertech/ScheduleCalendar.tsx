@@ -39,7 +39,9 @@ type ScheduleCalendarProps = {
   selectedTechId?: string;
   onSelectTech?: (id: string) => void;
   onAcceptSuggestion?: (suggestion: PreventifSuggestion) => void;
+  onRefuseSuggestion?: (suggestion: PreventifSuggestion) => void;
   onAcceptAllSuggestions?: () => void;
+  onRefuseAllSuggestions?: () => void;
   acceptingId?: string | null;
   onRemoveStop?: (techId: string, appelId: string) => void;
   removingId?: string | null;
@@ -156,7 +158,9 @@ export function ScheduleCalendar({
   selectedTechId,
   onSelectTech,
   onAcceptSuggestion,
+  onRefuseSuggestion,
   onAcceptAllSuggestions,
+  onRefuseAllSuggestions,
   acceptingId = null,
   onRemoveStop,
   removingId = null,
@@ -192,16 +196,26 @@ export function ScheduleCalendar({
               journée.
             </span>
           </div>
-          <button
-            type="button"
-            className="gt-btn gt-accept-all-btn"
-            disabled={Boolean(acceptingId)}
-            onClick={() => onAcceptAllSuggestions?.()}
-          >
-            {acceptingId === "__all__"
-              ? "Acceptation…"
-              : `Tout accepter (${suggestions.length})`}
-          </button>
+          <div className="gt-suggest-banner-actions">
+            <button
+              type="button"
+              className="gt-btn gt-accept-all-btn"
+              disabled={Boolean(acceptingId)}
+              onClick={() => onAcceptAllSuggestions?.()}
+            >
+              {acceptingId === "__all__"
+                ? "Acceptation…"
+                : `Tout accepter (${suggestions.length})`}
+            </button>
+            <button
+              type="button"
+              className="gt-btn-ghost"
+              disabled={Boolean(acceptingId)}
+              onClick={() => onRefuseAllSuggestions?.()}
+            >
+              Tout refuser
+            </button>
+          </div>
         </div>
       ) : null}
 
@@ -296,19 +310,32 @@ export function ScheduleCalendar({
                           <span className="gt-cal-event-meta">
                             {item.suggestion.reason}
                           </span>
-                          <button
-                            type="button"
-                            className="gt-suggest-btn"
-                            disabled={Boolean(acceptingId)}
-                            onClick={(event) => {
-                              event.stopPropagation();
-                              onAcceptSuggestion?.(item.suggestion);
-                            }}
-                          >
-                            {acceptingId === item.suggestion.appel.id
-                              ? "Ajout…"
-                              : "Accepter"}
-                          </button>
+                          <div className="gt-suggest-actions">
+                            <button
+                              type="button"
+                              className="gt-suggest-btn"
+                              disabled={Boolean(acceptingId)}
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                onAcceptSuggestion?.(item.suggestion);
+                              }}
+                            >
+                              {acceptingId === item.suggestion.appel.id
+                                ? "Ajout…"
+                                : "Accepter"}
+                            </button>
+                            <button
+                              type="button"
+                              className="gt-suggest-btn refuse"
+                              disabled={Boolean(acceptingId)}
+                              onClick={(event) => {
+                                event.stopPropagation();
+                                onRefuseSuggestion?.(item.suggestion);
+                              }}
+                            >
+                              Refuser
+                            </button>
+                          </div>
                         </div>
                       );
                     }

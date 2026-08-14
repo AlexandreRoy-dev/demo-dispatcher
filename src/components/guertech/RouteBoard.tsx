@@ -17,7 +17,9 @@ type RouteBoardProps = {
   routes: TechRoute[];
   suggestions?: PreventifSuggestion[];
   onAcceptSuggestion?: (suggestion: PreventifSuggestion) => void;
+  onRefuseSuggestion?: (suggestion: PreventifSuggestion) => void;
   onAcceptAllSuggestions?: () => void;
+  onRefuseAllSuggestions?: () => void;
   acceptingId?: string | null;
   overtimeWarnings?: OvertimeWarning[];
   overtimeIgnored?: boolean;
@@ -33,7 +35,9 @@ export function RouteBoard({
   routes,
   suggestions = [],
   onAcceptSuggestion,
+  onRefuseSuggestion,
   onAcceptAllSuggestions,
+  onRefuseAllSuggestions,
   acceptingId = null,
   overtimeWarnings = [],
   overtimeIgnored = false,
@@ -208,7 +212,9 @@ export function RouteBoard({
             selectedTechId={current.tech.id}
             onSelectTech={setTechId}
             onAcceptSuggestion={onAcceptSuggestion}
+            onRefuseSuggestion={onRefuseSuggestion}
             onAcceptAllSuggestions={onAcceptAllSuggestions}
+            onRefuseAllSuggestions={onRefuseAllSuggestions}
             acceptingId={acceptingId}
             onRemoveStop={onRemoveStop}
             removingId={removingId}

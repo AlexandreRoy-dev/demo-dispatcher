@@ -9,19 +9,15 @@ const STEPS = [
   },
   {
     title: "Générer une suggestion",
-    body: "Remplit seulement les champs vides (date, durées, quota, présence) selon le ratio Q4 et le SLA réactif de 2 jours.",
+    body: "Remplit les champs vides et construit tout de suite les tournées dans le calendrier (urgence d’abord, trajets Google).",
   },
   {
-    title: "Appels",
-    body: "Cochez Planifié + heure + tech pour figer un rendez-vous 24 h. Filtrez réactifs ou délai dépassé au besoin.",
-  },
-  {
-    title: "Générer les routes",
-    body: "Assigne les appels (urgence d’abord, proximité ensuite) et calcule les trajets Google Maps dans le calendrier.",
+    title: "Appels planifiés",
+    body: "Cochez Planifié + heure + tech : l’arrêt apparaît immédiatement au calendrier. × le retire.",
   },
   {
     title: "Calendrier",
-    body: "Rouge = réactif, vert = préventif, hachuré = trajet. Accepter / Tout accepter pour les suggestions. × retire un arrêt.",
+    body: "Rouge = réactif, jaune = préventif, hachuré = trajet. Accepter ou Refuser les suggestions (une par une ou toutes).",
   },
   {
     title: "Fenêtre 8 h–17 h",

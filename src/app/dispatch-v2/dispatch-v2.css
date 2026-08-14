@@ -7,7 +7,7 @@
   --gt-muted: #5b6578;
   --gt-line: rgba(25, 62, 123, 0.14);
   --gt-reactif: #9b2c2c;
-  --gt-preventif: #1f6b4a;
+  --gt-preventif: #b7791f;
   --gt-ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
   color: var(--gt-ink);
 }
@@ -668,8 +668,8 @@
 }
 
 .gt-tag.preventif {
-  background: rgba(31, 107, 74, 0.12);
-  color: var(--gt-preventif);
+  background: rgba(183, 121, 31, 0.16);
+  color: #975a16;
 }
 
 .gt-tag.reactif {
@@ -686,6 +686,15 @@
   display: grid;
   gap: 0.35rem;
   justify-items: end;
+}
+
+.gt-call-hint {
+  margin: 0.15rem 0 0;
+  max-width: 14rem;
+  color: var(--gt-muted);
+  font-size: 0.75rem;
+  line-height: 1.35;
+  text-align: right;
 }
 
 .gt-error,
@@ -943,9 +952,9 @@
 }
 
 .gt-cal-event.preventif {
-  background: #e5f3ec;
-  border-color: #1f6b4a;
-  color: #14523a;
+  background: #fef3c7;
+  border-color: #d69e2e;
+  color: #744210;
 }
 
 .gt-cal-event.reactif {
@@ -992,9 +1001,9 @@
   margin: 0 0 0.85rem;
   padding: 0.7rem 0.9rem;
   border-radius: 10px;
-  border: 1px dashed #1f6b4a;
-  background: linear-gradient(135deg, #f3faf6 0%, #e8f4ee 100%);
-  color: #14523a;
+  border: 1px dashed #d69e2e;
+  background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+  color: #744210;
   font-size: 0.86rem;
 }
 
@@ -1007,6 +1016,13 @@
 
 .gt-suggest-banner strong {
   font-size: 0.92rem;
+}
+
+.gt-suggest-banner-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  flex-shrink: 0;
 }
 
 .gt-accept-all-btn {
@@ -1026,23 +1042,29 @@
   line-height: 1.25;
   background: repeating-linear-gradient(
     -45deg,
-    rgba(229, 243, 236, 0.95),
-    rgba(229, 243, 236, 0.95) 6px,
-    rgba(255, 255, 255, 0.75) 6px,
-    rgba(255, 255, 255, 0.75) 12px
+    rgba(254, 243, 199, 0.95),
+    rgba(254, 243, 199, 0.95) 6px,
+    rgba(255, 255, 255, 0.8) 6px,
+    rgba(255, 255, 255, 0.8) 12px
   );
-  border: 1.5px dashed #1f6b4a;
-  color: #14523a;
-  box-shadow: 0 2px 10px rgba(31, 107, 74, 0.12);
+  border: 1.5px dashed #d69e2e;
+  color: #744210;
+  box-shadow: 0 2px 10px rgba(183, 121, 31, 0.14);
+}
+
+.gt-suggest-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-top: 0.35rem;
 }
 
 .gt-suggest-btn {
   display: inline-block;
-  margin-top: 0.35rem;
   padding: 0.2rem 0.45rem;
   border-radius: 6px;
-  border: 1px solid #1f6b4a;
-  background: #1f6b4a;
+  border: 1px solid #b7791f;
+  background: #b7791f;
   color: #fff;
   font-size: 0.66rem;
   font-weight: 700;
@@ -1050,12 +1072,22 @@
 }
 
 .gt-suggest-btn:hover:not(:disabled) {
-  background: #14523a;
+  background: #975a16;
 }
 
 .gt-suggest-btn:disabled {
   opacity: 0.65;
   cursor: wait;
+}
+
+.gt-suggest-btn.refuse {
+  background: transparent;
+  color: #744210;
+  border-color: rgba(116, 66, 16, 0.45);
+}
+
+.gt-suggest-btn.refuse:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.7);
 }
 
 @keyframes gt-fade-up {

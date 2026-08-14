@@ -14,6 +14,7 @@ type CallListProps = {
   onPlannedOnly: (value: boolean) => void;
   onSearch: (value: string) => void;
   onUpdate: (id: string, patch: Partial<Appel>) => void;
+  onCalendarIds?: Set<string>;
 };
 
 function CallCard({
@@ -21,11 +22,13 @@ function CallCard({
   techs,
   overdue,
   onUpdate,
+  onCalendar,
 }: {
   appel: Appel;
   techs: Tech[];
   overdue?: boolean;
   onUpdate: (id: string, patch: Partial<Appel>) => void;
+  onCalendar?: boolean;
 }) {
   return (
     <article className={`gt-call${overdue ? " gt-call-overdue" : ""}`}>
@@ -38,6 +41,7 @@ function CallCard({
           {appel.planifie ? (
             <span className="gt-tag pin">Planifié {appel.heure}</span>
           ) : null}
+          {onCalendar ? <span className="gt-tag pin">Calendrier</span> : null}
           {appel.magasin}
         </h3>
         <p>
@@ -97,6 +101,11 @@ function CallCard({
                 ))}
               </select>
             </label>
+            <p className="gt-call-hint">
+              {onCalendar
+                ? "Déjà sur le calendrier — changez l’heure ou le tech pour mettre à jour."
+                : "S’ajoute au calendrier dès que l’heure est choisie."}
+            </p>
           </>
         ) : null}
       </div>
@@ -115,59 +124,68 @@ export function CallList({
   onPlannedOnly,
   onSearch,
   onUpdate,
+  onCalendarIds,
 }: CallListProps) {
   const query = search.trim().toLowerCase();
 
-  const matchesSearch = (appel: Appel) => {
-    if (!query) return true;
-    return `${appel.magasin} ${appel.adresse} ${appel.equipement} ${appel.netsuiteId}`
-      .toLowerCase()
-      .includes(query);
-  };
-
-  const base = calls.filter((appel) => {
+  const filtered = calls.filter((appel) => {
+    if (filter === "preventif" && appel.type !== "preventif") return false;
+    if (filter === "reactif" && appel.type !== "reactif") return false;
+    if (filter === "overdue" && !isReactifOverdue(appel, asOfDate)) return false;
     if (plannedOnly && !appel.planifie) return false;
-    return matchesSearch(appel);
+    if (!query) return true;
+    return (
+      appel.magasin.toLowerCase().includes(query) ||
+      appel.adresse.toLowerCase().includes(query) ||
+      appel.netsuiteId.toLowerCase().includes(query)
+    );
   });
 
-  const overdue = base.filter((appel) => isReactifOverdue(appel, asOfDate));
-  const reactifPending = base.filter(
-    (appel) => appel.type === "reactif" && !isReactifOverdue(appel, asOfDate),
+  const overdue = filtered.filter((appel) =>
+    isReactifOverdue(appel, asOfDate),
   );
-  const preventifs = base.filter((appel) => appel.type === "preventif");
+  const reactifPending = filtered.filter(
+    (appel) =>
+      appel.type === "reactif" && !isReactifOverdue(appel, asOfDate),
+  );
+  const preventif = filtered.filter((appel) => appel.type === "preventif");
 
-  let sections: Array<{ title: string; items: Appel[]; overdue?: boolean }> = [];
-  if (filter === "overdue") {
-    sections = [
-      { title: "Réactif délai dépassé", items: overdue, overdue: true },
-    ];
-  } else if (filter === "reactif") {
-    sections = [
-      { title: "Réactif délai dépassé", items: overdue, overdue: true },
-      {
-        title: "Réactif — en attente (délai 2 jours)",
-        items: reactifPending,
-      },
-    ];
-  } else if (filter === "preventif") {
-    sections = [{ title: "Préventif", items: preventifs }];
-  } else {
-    sections = [
-      { title: "Réactif délai dépassé", items: overdue, overdue: true },
-      {
-        title: "Réactif — en attente (délai 2 jours)",
-        items: reactifPending,
-      },
-      { title: "Préventif", items: preventifs },
-    ];
-  }
-
-  const totalVisible = sections.reduce((sum, section) => sum + section.items.length, 0);
+  const sections =
+    filter === "all"
+      ? [
+          {
+            title: "Réactif — délai dépassé",
+            items: overdue,
+            overdue: true,
+          },
+          {
+            title: "Réactif — en attente (délai 2 jours)",
+            items: reactifPending,
+            overdue: false,
+          },
+          {
+            title: "Préventif",
+            items: preventif,
+            overdue: false,
+          },
+        ]
+      : [
+          {
+            title:
+              filter === "overdue"
+                ? "Réactif — délai dépassé"
+                : filter === "reactif"
+                  ? "Réactif"
+                  : "Préventif",
+            items: filtered,
+            overdue: filter === "overdue",
+          },
+        ];
 
   return (
     <section className="gt-panel">
       <h2>
-        Appels ({totalVisible} / {calls.length})
+        Appels ({filtered.length} / {calls.length})
       </h2>
       <div className="gt-tabs">
         <button
@@ -196,7 +214,7 @@ export function CallList({
           className={filter === "overdue" ? "on" : ""}
           onClick={() => onFilter("overdue")}
         >
-          Délai dépassé ({overdue.length})
+          Délai dépassé ({overdue.length || calls.filter((c) => isReactifOverdue(c, asOfDate)).length})
         </button>
       </div>
       <div className="gt-row">
@@ -221,9 +239,10 @@ export function CallList({
           const shown = section.items;
           return (
             <div key={section.title} className="gt-call-section">
-              <h3 className={`gt-section-title${section.overdue ? " overdue" : ""}`}>
-                {section.title}{" "}
-                <span>({section.items.length})</span>
+              <h3
+                className={`gt-section-title${section.overdue ? " overdue" : ""}`}
+              >
+                {section.title} <span>({section.items.length})</span>
               </h3>
               {section.items.length === 0 ? (
                 <p className="gt-section-empty">Aucun appel dans cette section.</p>
@@ -235,6 +254,7 @@ export function CallList({
                     techs={techs}
                     overdue={section.overdue}
                     onUpdate={onUpdate}
+                    onCalendar={onCalendarIds?.has(appel.id)}
                   />
                 ))
               )}
