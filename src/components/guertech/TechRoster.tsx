@@ -66,6 +66,7 @@ export function TechRoster({ techs, onChange, onAdd }: TechRosterProps) {
               <input
                 type="time"
                 value={tech.startHour}
+                placeholder="08:00"
                 onChange={(event) =>
                   onChange(tech.id, { startHour: event.target.value })
                 }
@@ -76,6 +77,7 @@ export function TechRoster({ techs, onChange, onAdd }: TechRosterProps) {
               <input
                 type="time"
                 value={tech.endHour}
+                placeholder="17:00"
                 onChange={(event) =>
                   onChange(tech.id, { endHour: event.target.value })
                 }
@@ -86,12 +88,14 @@ export function TechRoster({ techs, onChange, onAdd }: TechRosterProps) {
             id={`start-${tech.id}`}
             label="Point de départ"
             value={tech.start}
+            placeholder="Adresse de départ"
             onChange={(value) => onChange(tech.id, { start: value })}
           />
           <AddressInput
             id={`end-${tech.id}`}
             label="Point d'arrivée"
             value={tech.end}
+            placeholder="Adresse d'arrivée"
             onChange={(value) => onChange(tech.id, { end: value })}
           />
           <div className="gt-skills">

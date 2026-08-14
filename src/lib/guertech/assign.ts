@@ -146,9 +146,20 @@ export function assignDay(options: {
     regions,
   );
 
+  /** Addresses already on today's routes (typically réactifs) — leave matching PM for suggestions. */
+  const routedAddresses = new Set(
+    Object.values(byTech)
+      .flat()
+      .map((stop) => stop.appel.adresse.trim().toLowerCase()),
+  );
+
   let pmLeft = options.pmQuota;
   for (const appel of preventifToday) {
     if (pmLeft <= 0) break;
+    if (routedAddresses.has(appel.adresse.trim().toLowerCase())) {
+      // Dual client: same store already has a stop today → suggest in calendar instead.
+      continue;
+    }
     const minutes = onSiteMinutes(appel.type, durations);
     const tech = pickTech(present, appel, capacity, byTech, minutes);
     if (!tech) {

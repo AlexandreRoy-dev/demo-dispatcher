@@ -30,7 +30,7 @@ function parseCsvLine(line: string): string[] {
 }
 
 export async function loadAppels(): Promise<Appel[]> {
-  const response = await fetch("/guertech/appels.csv", { cache: "no-store" });
+  const response = await fetch("/dispatch-v2/appels.csv", { cache: "no-store" });
   if (!response.ok) {
     throw new Error("Impossible de charger la liste d'appels.");
   }

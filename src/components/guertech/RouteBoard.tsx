@@ -4,6 +4,9 @@ import { useMemo, useState } from "react";
 import { RouteMap } from "@/components/RouteMap";
 import { ScheduleCalendar } from "@/components/guertech/ScheduleCalendar";
 import { DRUMMONDVILLE_CENTER } from "@/lib/guertech/constants";
+import { ROAD_WINDOW } from "@/lib/guertech/optimize";
+import type { OvertimeWarning } from "@/lib/guertech/optimize";
+import type { PreventifSuggestion } from "@/lib/guertech/suggestions";
 import type { TechRoute, Unassigned } from "@/lib/guertech/types";
 import {
   buildGoogleMapsRouteUrl,
@@ -13,9 +16,26 @@ import {
 type RouteBoardProps = {
   routes: TechRoute[];
   unassigned: Unassigned[];
+  suggestions?: PreventifSuggestion[];
+  onAcceptSuggestion?: (suggestion: PreventifSuggestion) => void;
+  acceptingId?: string | null;
+  overtimeWarnings?: OvertimeWarning[];
+  overtimeIgnored?: boolean;
+  onIgnoreOvertime?: () => void;
+  onTrimOvertime?: () => void;
 };
 
-export function RouteBoard({ routes, unassigned }: RouteBoardProps) {
+export function RouteBoard({
+  routes,
+  unassigned,
+  suggestions = [],
+  onAcceptSuggestion,
+  acceptingId = null,
+  overtimeWarnings = [],
+  overtimeIgnored = false,
+  onIgnoreOvertime,
+  onTrimOvertime,
+}: RouteBoardProps) {
   const withWork = routes.filter((route) => route.stops.length > 0);
   const [techId, setTechId] = useState(withWork[0]?.tech.id ?? "");
   const [view, setView] = useState<"calendar" | "list">("calendar");
@@ -95,16 +115,63 @@ export function RouteBoard({ routes, unassigned }: RouteBoardProps) {
         </div>
       </div>
 
+      {overtimeWarnings.length > 0 && !overtimeIgnored ? (
+        <div className="gt-overtime-banner" role="alert">
+          <div>
+            <strong>
+              Avertissement — fenêtre 8 h–{ROAD_WINDOW.softEndLabel}
+            </strong>
+            <p>
+              {overtimeWarnings.length} technicien(s) termineraient après{" "}
+              {ROAD_WINDOW.softEndLabel} (retour dépôt inclus) :
+              {" "}
+              {overtimeWarnings
+                .map(
+                  (item) =>
+                    `${item.techName} (~${item.finishLabel}, +${item.overtimeMin} min)`,
+                )
+                .join(" · ")}
+              . Vous pouvez ignorer l&apos;avertissement ou raccourcir
+              automatiquement.
+            </p>
+          </div>
+          <div className="gt-overtime-actions">
+            <button
+              type="button"
+              className="gt-btn-ghost"
+              onClick={onIgnoreOvertime}
+            >
+              Ignorer
+            </button>
+            <button type="button" className="gt-btn" onClick={onTrimOvertime}>
+              Raccourcir pour finir à {ROAD_WINDOW.softEndLabel}
+            </button>
+          </div>
+        </div>
+      ) : null}
+
+      {overtimeWarnings.length > 0 && overtimeIgnored ? (
+        <p className="gt-overtime-ignored">
+          Fenêtre 8 h–{ROAD_WINDOW.softEndLabel} dépassée — avertissement ignoré
+          ({overtimeWarnings.map((item) => item.techName).join(", ")}).
+        </p>
+      ) : null}
+
       {view === "calendar" ? (
         <>
           <p className="gt-share-hint">
-            Horaires côte à côte pour chaque technicien présent. Cliquez une
-            colonne pour ouvrir les liens Google Maps de ce tech.
+            Horaires côte à côte. Les bandes hachurées sont les trajets Google
+            Maps entre les arrêts. Les blocs en pointillés sont des préventifs
+            à proximité suggérés dans les créneaux libres — cliquez pour les
+            ajouter.
           </p>
           <ScheduleCalendar
             routes={withWork}
+            suggestions={suggestions}
             selectedTechId={current.tech.id}
             onSelectTech={setTechId}
+            onAcceptSuggestion={onAcceptSuggestion}
+            acceptingId={acceptingId}
           />
           <div className="gt-share" style={{ marginTop: "0.85rem" }}>
             <strong style={{ alignSelf: "center" }}>{current.tech.name}</strong>
@@ -205,9 +272,16 @@ export function RouteBoard({ routes, unassigned }: RouteBoardProps) {
                     {stop.appel.adresse}
                     {stop.pinned ? ` · ${stop.appel.heure}` : ""}
                     {current.google?.optimizedStopDetails[index]
-                      ? ` · ${current.google.optimizedStopDetails[index].arriveLabel}`
+                      ? ` · ${current.google.optimizedStopDetails[index].arriveLabel}–${current.google.optimizedStopDetails[index].leaveLabel}`
                       : ""}
                   </p>
+                  {current.google?.legs[index] ? (
+                    <p className="optimized-leg">
+                      Trajet vers cet arrêt :{" "}
+                      {current.google.legs[index].durationText} ·{" "}
+                      {current.google.legs[index].distanceText}
+                    </p>
+                  ) : null}
                 </div>
               </li>
             ))}

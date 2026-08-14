@@ -140,8 +140,8 @@ function tech(
     start: DRUMMONDVILLE_HQ,
     end: DRUMMONDVILLE_HQ,
     startHour: "08:00",
-    endHour: "16:30",
-    hours: 8,
+    endHour: "17:00",
+    hours: 9,
     region,
     skills: ALL_SKILL_IDS.filter((skillId) => !skillSkip.includes(skillId)),
   };

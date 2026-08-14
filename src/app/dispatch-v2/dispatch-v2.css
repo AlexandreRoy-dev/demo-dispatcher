@@ -363,6 +363,42 @@
   color: var(--gt-navy);
 }
 
+.gt-overtime-banner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin: 0 0 1rem;
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  border: 1px solid #b7791f;
+  background: linear-gradient(135deg, #fffaf0 0%, #feebc8 100%);
+  color: #744210;
+}
+
+.gt-overtime-banner p {
+  margin: 0.35rem 0 0;
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+
+.gt-overtime-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.gt-overtime-ignored {
+  margin: 0 0 0.85rem;
+  padding: 0.55rem 0.8rem;
+  border-radius: 8px;
+  background: #f7fafc;
+  border: 1px dashed #a0aec0;
+  color: #4a5568;
+  font-size: 0.86rem;
+}
+
 .gt-stop-pin {
   outline: 2px solid rgba(25, 62, 123, 0.25);
 }
@@ -415,7 +451,7 @@
 
 .gt-cal-hours {
   position: relative;
-  height: 36rem;
+  height: 40rem;
   margin-top: 3.4rem;
 }
 
@@ -471,52 +507,75 @@
 
 .gt-cal-day {
   position: relative;
-  height: 36rem;
-  background:
-    linear-gradient(
-      180deg,
-      rgba(25, 62, 123, 0.03),
-      transparent 12%,
-      transparent 88%,
-      rgba(25, 62, 123, 0.03)
-    );
+  height: 40rem;
+  background: #faf9f6;
 }
 
 .gt-cal-gridline {
   position: absolute;
   left: 0;
   right: 0;
-  border-top: 1px dashed rgba(25, 62, 123, 0.12);
+  border-top: 1px dashed rgba(25, 62, 123, 0.1);
   pointer-events: none;
+  z-index: 0;
+}
+
+.gt-cal-travel {
+  position: absolute;
+  left: 0.45rem;
+  right: 0.45rem;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.1rem 0.35rem;
+  border-radius: 6px;
+  border: 1px dashed rgba(91, 101, 120, 0.45);
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(91, 101, 120, 0.06),
+    rgba(91, 101, 120, 0.06) 4px,
+    rgba(91, 101, 120, 0.12) 4px,
+    rgba(91, 101, 120, 0.12) 8px
+  );
+  color: var(--gt-muted);
+  font-size: 0.65rem;
+  font-weight: 650;
+  text-align: center;
+  line-height: 1.2;
+  overflow: hidden;
 }
 
 .gt-cal-event {
   position: absolute;
-  left: 0.3rem;
-  right: 0.3rem;
-  padding: 0.28rem 0.4rem;
+  left: 0.35rem;
+  right: 0.35rem;
+  z-index: 2;
+  padding: 0.35rem 0.45rem;
   border-radius: 8px;
   overflow: hidden;
   font-size: 0.72rem;
   line-height: 1.25;
   border: 1px solid transparent;
-  box-shadow: 0 4px 12px rgba(18, 42, 84, 0.08);
+  box-shadow: 0 2px 8px rgba(18, 42, 84, 0.1);
 }
 
 .gt-cal-event.preventif {
-  background: rgba(31, 107, 74, 0.14);
-  border-color: rgba(31, 107, 74, 0.28);
+  background: #e5f3ec;
+  border-color: #1f6b4a;
   color: #14523a;
 }
 
 .gt-cal-event.reactif {
-  background: rgba(155, 44, 44, 0.12);
-  border-color: rgba(155, 44, 44, 0.28);
+  background: #f8e8e8;
+  border-color: #9b2c2c;
   color: #7a2020;
 }
 
 .gt-cal-event.pinned {
-  outline: 2px solid rgba(25, 62, 123, 0.35);
+  box-shadow:
+    inset 0 0 0 2px rgba(25, 62, 123, 0.45),
+    0 2px 8px rgba(18, 42, 84, 0.1);
 }
 
 .gt-cal-event-time,
@@ -528,17 +587,79 @@
 .gt-cal-event-time {
   font-family: var(--font-mono);
   font-weight: 700;
-  font-size: 0.68rem;
+  font-size: 0.66rem;
 }
 
 .gt-cal-event-title {
   font-weight: 700;
-  margin-top: 0.1rem;
+  margin-top: 0.12rem;
 }
 
 .gt-cal-event-meta {
-  margin-top: 0.1rem;
-  opacity: 0.85;
+  margin-top: 0.12rem;
+  opacity: 0.9;
+}
+
+.gt-suggest-banner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.85rem;
+  align-items: baseline;
+  margin: 0 0 0.85rem;
+  padding: 0.7rem 0.9rem;
+  border-radius: 10px;
+  border: 1px dashed #1f6b4a;
+  background: linear-gradient(135deg, #f3faf6 0%, #e8f4ee 100%);
+  color: #14523a;
+  font-size: 0.86rem;
+}
+
+.gt-suggest-banner strong {
+  font-size: 0.92rem;
+}
+
+.gt-cal-suggest {
+  position: absolute;
+  left: 0.35rem;
+  right: 0.35rem;
+  z-index: 3;
+  padding: 0.35rem 0.45rem;
+  border-radius: 8px;
+  overflow: hidden;
+  font-size: 0.72rem;
+  line-height: 1.25;
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(229, 243, 236, 0.95),
+    rgba(229, 243, 236, 0.95) 6px,
+    rgba(255, 255, 255, 0.75) 6px,
+    rgba(255, 255, 255, 0.75) 12px
+  );
+  border: 1.5px dashed #1f6b4a;
+  color: #14523a;
+  box-shadow: 0 2px 10px rgba(31, 107, 74, 0.12);
+}
+
+.gt-suggest-btn {
+  display: inline-block;
+  margin-top: 0.35rem;
+  padding: 0.2rem 0.45rem;
+  border-radius: 6px;
+  border: 1px solid #1f6b4a;
+  background: #1f6b4a;
+  color: #fff;
+  font-size: 0.66rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.gt-suggest-btn:hover:not(:disabled) {
+  background: #14523a;
+}
+
+.gt-suggest-btn:disabled {
+  opacity: 0.65;
+  cursor: wait;
 }
 
 @keyframes gt-fade-up {

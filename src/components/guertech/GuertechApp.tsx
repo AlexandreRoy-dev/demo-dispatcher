@@ -6,19 +6,33 @@ import { CallList } from "@/components/guertech/CallList";
 import { RouteBoard } from "@/components/guertech/RouteBoard";
 import { TechRoster } from "@/components/guertech/TechRoster";
 import {
-  assignDay,
-  mergePinnedAroundMovable,
-} from "@/lib/guertech/assign";
-import {
   countBusinessDays,
-  createDefaultTechs,
-  DEFAULT_DURATIONS,
+  DRUMMONDVILLE_HQ,
   isReactifOverdue,
   preventifPerBusinessDay,
   QUARTER,
   SLA,
 } from "@/lib/guertech/constants";
 import { loadAppels } from "@/lib/guertech/csv";
+import {
+  evaluateRoadWindow,
+  mergePinnedOptimal,
+  optimizeDay,
+  ROAD_WINDOW,
+  trimToSoftEnd,
+  type OvertimeWarning,
+} from "@/lib/guertech/optimize";
+import {
+  blankCallAssignments,
+  createBlankRoster,
+  DEMO_PLAN_DATE,
+  parseDurations,
+  suggestPlannerFields,
+} from "@/lib/guertech/suggest-form";
+import {
+  suggestPreventifs,
+  type PreventifSuggestion,
+} from "@/lib/guertech/suggestions";
 import type {
   Appel,
   CallType,
@@ -28,10 +42,6 @@ import type {
   Unassigned,
 } from "@/lib/guertech/types";
 import type { OptimizeRouteResponse } from "@/lib/types";
-
-function todayIsoDate(): string {
-  return "2026-08-13";
-}
 
 async function fetchRoute(payload: {
   start: string;
@@ -89,11 +99,12 @@ async function buildTechRoute(
       }
     }
 
-    const merged = mergePinnedAroundMovable(
+    const { ordered: merged } = mergePinnedOptimal(
       limited,
       movableOrder,
       tech.startHour,
-      tech.endHour,
+      ROAD_WINDOW.softEnd,
+      true,
     );
 
     const google = await fetchRoute({
@@ -109,11 +120,12 @@ async function buildTechRoute(
 
     return { tech, stops: merged, google, error: null };
   } catch (err) {
-    const merged = mergePinnedAroundMovable(
+    const { ordered: merged } = mergePinnedOptimal(
       limited,
       movableOrder,
       tech.startHour,
-      tech.endHour,
+      ROAD_WINDOW.softEnd,
+      true,
     );
     return {
       tech,
@@ -129,12 +141,13 @@ async function buildTechRoute(
 
 function Workspace() {
   const [calls, setCalls] = useState<Appel[]>([]);
-  const [techs, setTechs] = useState<Tech[]>(() => createDefaultTechs());
+  const [techs, setTechs] = useState<Tech[]>(() => createBlankRoster());
   const [loadError, setLoadError] = useState<string | null>(null);
-  const [date, setDate] = useState(todayIsoDate);
-  const [moveAssigned, setMoveAssigned] = useState(false);
-  const [pmQuota, setPmQuota] = useState(10);
-  const [durations, setDurations] = useState(DEFAULT_DURATIONS);
+  const [date, setDate] = useState("");
+  const [moveAssigned, setMoveAssigned] = useState<boolean | null>(null);
+  const [pmQuota, setPmQuota] = useState("");
+  const [reactifDuration, setReactifDuration] = useState("");
+  const [preventifDuration, setPreventifDuration] = useState("");
   const [filter, setFilter] = useState<"all" | CallType | "overdue">("all");
   const [plannedOnly, setPlannedOnly] = useState(false);
   const [search, setSearch] = useState("");
@@ -144,24 +157,40 @@ function Workspace() {
   const [toast, setToast] = useState<string | null>(null);
   const [routes, setRoutes] = useState<TechRoute[] | null>(null);
   const [unassigned, setUnassigned] = useState<Unassigned[]>([]);
+  const [acceptingId, setAcceptingId] = useState<string | null>(null);
+  const [allowOvertime, setAllowOvertime] = useState<boolean | null>(null);
+  const [overtimeWarnings, setOvertimeWarnings] = useState<OvertimeWarning[]>(
+    [],
+  );
+  const [overtimeIgnored, setOvertimeIgnored] = useState(false);
+  const [presenceTouched, setPresenceTouched] = useState<Set<string>>(
+    () => new Set(),
+  );
+  const [skillsTouched, setSkillsTouched] = useState<Set<string>>(
+    () => new Set(),
+  );
+  const [suggestionReady, setSuggestionReady] = useState(false);
   const resultsRef = useRef<HTMLDivElement>(null);
 
+  const effectiveDate = date || DEMO_PLAN_DATE;
+  const durations = useMemo(
+    () => parseDurations(reactifDuration, preventifDuration),
+    [reactifDuration, preventifDuration],
+  );
+  const pmQuotaNumber = Number(pmQuota) || 0;
+
   const businessDaysLeft = useMemo(
-    () => countBusinessDays(date, QUARTER.deadline),
-    [date],
+    () => countBusinessDays(effectiveDate, QUARTER.deadline),
+    [effectiveDate],
   );
   const avgPreventifPerDay = useMemo(
-    () => preventifPerBusinessDay(date),
-    [date],
+    () => preventifPerBusinessDay(effectiveDate),
+    [effectiveDate],
   );
-
-  useEffect(() => {
-    setPmQuota(Math.max(1, Math.ceil(avgPreventifPerDay)));
-  }, [avgPreventifPerDay]);
 
   useEffect(() => {
     loadAppels()
-      .then(setCalls)
+      .then((rows) => setCalls(blankCallAssignments(rows)))
       .catch((err: unknown) =>
         setLoadError(
           err instanceof Error ? err.message : "Chargement impossible",
@@ -172,18 +201,38 @@ function Workspace() {
   const reactifPendingCount = useMemo(
     () =>
       calls.filter(
-        (item) => item.type === "reactif" && !isReactifOverdue(item, date),
+        (item) =>
+          item.type === "reactif" && !isReactifOverdue(item, effectiveDate),
       ).length,
-    [calls, date],
+    [calls, effectiveDate],
   );
   const reactifOverdueCount = useMemo(
-    () => calls.filter((item) => isReactifOverdue(item, date)).length,
-    [calls, date],
+    () => calls.filter((item) => isReactifOverdue(item, effectiveDate)).length,
+    [calls, effectiveDate],
   );
 
   const missingPlannedTime = calls.filter(
     (item) => item.planifie && !item.heure,
   );
+
+  const preventifSuggestions = useMemo(() => {
+    if (!routes) return [];
+    const assignedIds = new Set(
+      routes.flatMap((route) => route.stops.map((stop) => stop.appel.id)),
+    );
+    const candidates = calls.filter(
+      (appel) =>
+        appel.type === "preventif" &&
+        !appel.planifie &&
+        !assignedIds.has(appel.id),
+    );
+    return suggestPreventifs({
+      routes,
+      candidates,
+      durations,
+      maxPerTech: 2,
+    });
+  }, [routes, calls, durations]);
 
   const updateCall = useCallback((id: string, patch: Partial<Appel>) => {
     setCalls((current) =>
@@ -192,6 +241,12 @@ function Workspace() {
   }, []);
 
   const updateTech = useCallback((id: string, patch: Partial<Tech>) => {
+    if ("present" in patch) {
+      setPresenceTouched((current) => new Set(current).add(id));
+    }
+    if ("skills" in patch) {
+      setSkillsTouched((current) => new Set(current).add(id));
+    }
     setTechs((current) =>
       current.map((item) => (item.id === id ? { ...item, ...patch } : item)),
     );
@@ -202,20 +257,184 @@ function Workspace() {
     setTechs((current) => [
       ...current,
       {
-        ...createDefaultTechs()[0],
+        ...createBlankRoster()[0],
         id,
         name: `Technicien ${id}`,
-        present: true,
+        present: false,
       },
     ]);
   }, [techs.length]);
 
+  function applySuggestion() {
+    setError(null);
+    if (calls.length === 0) {
+      setError("Liste d'appels encore vide — attendez le chargement du CSV.");
+      return;
+    }
+
+    const result = suggestPlannerFields({
+      inputs: {
+        date,
+        pmQuota,
+        reactifDuration,
+        preventifDuration,
+        moveAssigned,
+        allowOvertime,
+      },
+      techs,
+      calls,
+      presenceTouched,
+      skillsTouched,
+    });
+
+    setDate(result.date);
+    setPmQuota(result.pmQuota);
+    setReactifDuration(result.reactifDuration);
+    setPreventifDuration(result.preventifDuration);
+    setMoveAssigned(result.moveAssigned);
+    setAllowOvertime(result.allowOvertime);
+    setTechs(result.techs);
+    setCalls(result.calls);
+    setSuggestionReady(true);
+    setToast(
+      `Suggestion appliquée (champs vides seulement) : ${result.summary.join(" · ")}`,
+    );
+  }
+
+  const acceptSuggestion = useCallback(
+    async (suggestion: PreventifSuggestion) => {
+      if (!routes || acceptingId) return;
+      const route = routes.find((item) => item.tech.id === suggestion.techId);
+      if (!route) return;
+
+      setAcceptingId(suggestion.appel.id);
+      setProgress(`Ajout du préventif sur ${route.tech.name}…`);
+      setToast(null);
+      setError(null);
+
+      try {
+        const newStop: DayStop = {
+          appel: { ...suggestion.appel, techId: suggestion.techId },
+          minutesOnSite: suggestion.minutesOnSite,
+          pinned: false,
+        };
+        const nextStops = [...route.stops];
+        const insertAt = Math.max(
+          0,
+          Math.min(suggestion.insertAfterIndex + 1, nextStops.length),
+        );
+        nextStops.splice(insertAt, 0, newStop);
+
+        const rebuilt = await buildTechRoute(route.tech, nextStops);
+        const nextRoutes = (routes ?? []).map((item) =>
+          item.tech.id === route.tech.id ? rebuilt : item,
+        );
+        setRoutes(nextRoutes);
+        setUnassigned((current) =>
+          current.filter((item) => item.appel.id !== suggestion.appel.id),
+        );
+        const warnings = evaluateRoadWindow(nextRoutes);
+        setOvertimeWarnings(warnings);
+        if (warnings.length > 0 && !overtimeIgnored && allowOvertime !== true) {
+          setToast(
+            `Préventif ajouté — attention : dépasse ${ROAD_WINDOW.softEndLabel}.`,
+          );
+        } else {
+          setToast(
+            `Préventif ajouté à ${route.tech.name} — ${suggestion.appel.magasin}`,
+          );
+        }
+      } catch (err) {
+        setError(
+          err instanceof Error
+            ? err.message
+            : "Impossible d'ajouter la suggestion.",
+        );
+      } finally {
+        setAcceptingId(null);
+        setProgress(null);
+      }
+    },
+    [routes, acceptingId, overtimeIgnored, allowOvertime],
+  );
+
+  const ignoreOvertimeWarning = useCallback(() => {
+    setOvertimeIgnored(true);
+    setAllowOvertime(true);
+    setToast(
+      `Avertissement 8 h–${ROAD_WINDOW.softEndLabel} ignoré — tournées conservées.`,
+    );
+  }, []);
+
+  const trimOvertimeRoutes = useCallback(async () => {
+    if (!routes) return;
+    setLoading(true);
+    setProgress("Raccourcissement des tournées…");
+    try {
+      const removedAll: DayStop[] = [];
+      const trimmed = routes.map((route) => {
+        const result = trimToSoftEnd(route.tech, route.stops);
+        removedAll.push(...result.removed);
+        return { ...route, stops: result.stops };
+      });
+
+      const rebuilt = await Promise.all(
+        trimmed.map(async (route) => {
+          if (route.stops.length === 0) {
+            return { ...route, google: null, error: null };
+          }
+          return buildTechRoute(route.tech, route.stops);
+        }),
+      );
+      setRoutes(rebuilt);
+      if (removedAll.length > 0) {
+        setUnassigned((current) => [
+          ...removedAll.map((stop) => ({
+            appel: stop.appel,
+            reason: `Retiré pour respecter ${ROAD_WINDOW.softEndLabel}`,
+          })),
+          ...current,
+        ]);
+      }
+      setOvertimeWarnings(evaluateRoadWindow(rebuilt));
+      setOvertimeIgnored(false);
+      setToast(
+        removedAll.length > 0
+          ? `${removedAll.length} arrêt(s) retirés pour finir avant ${ROAD_WINDOW.softEndLabel}.`
+          : `Impossible de raccourcir davantage (planifiés fixes).`,
+      );
+    } finally {
+      setLoading(false);
+      setProgress(null);
+    }
+  }, [routes]);
+
   async function generate() {
     setError(null);
     setToast(null);
+    setOvertimeIgnored(false);
+    setOvertimeWarnings([]);
 
     if (calls.length === 0) {
       setError("Liste d'appels encore vide — attendez le chargement du CSV.");
+      return;
+    }
+
+    const overtimeAllowed = allowOvertime === true;
+    const planDate = date || DEMO_PLAN_DATE;
+    const quota = pmQuotaNumber > 0 ? pmQuotaNumber : Math.ceil(avgPreventifPerDay);
+    const readyTechs = techs.map((tech) => ({
+      ...tech,
+      startHour: tech.startHour || ROAD_WINDOW.start,
+      endHour: tech.endHour || ROAD_WINDOW.softEnd,
+      start: tech.start || DRUMMONDVILLE_HQ,
+      end: tech.end || tech.start || DRUMMONDVILLE_HQ,
+    }));
+
+    if (!readyTechs.some((tech) => tech.present)) {
+      setError(
+        "Aucun technicien présent. Utilisez « Générer une suggestion » ou cochez Présent.",
+      );
       return;
     }
 
@@ -231,30 +450,44 @@ function Workspace() {
     }
 
     setLoading(true);
-    setProgress("Répartition des appels…");
+    setProgress("Optimisation de la journée (fenêtre 8 h–17 h)…");
 
     try {
-      const assigned = assignDay({
+      const assigned = optimizeDay({
         calls: workingCalls,
-        techs,
-        pmQuota,
+        techs: readyTechs,
+        pmQuota: quota,
         durations,
-        asOfDate: date,
+        asOfDate: planDate,
+        allowOvertime: overtimeAllowed,
       });
       setUnassigned(assigned.unassigned);
 
-      const present = techs.filter((tech) => tech.present);
+      const present = readyTechs.filter((tech) => tech.present);
+      const mergeLeftovers: DayStop[] = [];
       const draft: TechRoute[] = present.map((tech) => {
-        const stops = (assigned.byTech[tech.id] ?? []).slice(0, 8);
-        const movable = stops.filter((stop) => !stop.pinned);
-        const merged = mergePinnedAroundMovable(
-          stops,
+        const raw = (assigned.byTech[tech.id] ?? []).slice(0, 8);
+        const movable = raw.filter((stop) => !stop.pinned);
+        const { ordered, leftover } = mergePinnedOptimal(
+          raw,
           movable.map((stop) => stop.appel.id),
           tech.startHour,
-          tech.endHour,
+          ROAD_WINDOW.softEnd,
+          overtimeAllowed,
         );
-        return { tech, stops: merged, google: null, error: null };
+        mergeLeftovers.push(...leftover);
+        return { tech, stops: ordered, google: null, error: null };
       });
+
+      if (mergeLeftovers.length > 0) {
+        setUnassigned([
+          ...assigned.unassigned,
+          ...mergeLeftovers.map((stop) => ({
+            appel: stop.appel,
+            reason: `Hors fenêtre 8 h–${ROAD_WINDOW.softEndLabel}`,
+          })),
+        ]);
+      }
 
       setRoutes(draft);
       window.requestAnimationFrame(() => {
@@ -285,17 +518,35 @@ function Workspace() {
 
       setRoutes(googleRoutes);
 
+      const warnings = evaluateRoadWindow(googleRoutes);
+      const mergedWarnings = [...assigned.earlyWarnings];
+      for (const warning of warnings) {
+        if (!mergedWarnings.some((item) => item.techId === warning.techId)) {
+          mergedWarnings.push(warning);
+        } else {
+          const index = mergedWarnings.findIndex(
+            (item) => item.techId === warning.techId,
+          );
+          mergedWarnings[index] = warning;
+        }
+      }
+      setOvertimeWarnings(mergedWarnings);
+
       const failed = googleRoutes.filter((route) => route.error);
       if (failed.length > 0 && failed.length === withStops.length) {
         setError(
           `Google n'a pas renvoyé de routes (${failed[0]?.error}). Le calendrier affiche quand même l'horaire estimé.`,
+        );
+      } else if (mergedWarnings.length > 0 && !overtimeAllowed) {
+        setToast(
+          `Tournées générées — ${mergedWarnings.length} tech(s) dépassent ${ROAD_WINDOW.softEndLabel}.`,
         );
       } else if (failed.length > 0) {
         setToast(
           `${failed.length} tournée(s) sans trafic Google — horaires estimés affichés.`,
         );
       } else {
-        setToast("Tournées générées — calendrier mis à jour.");
+        setToast("Tournées optimisées — calendrier mis à jour.");
       }
     } catch (err) {
       setError(
@@ -311,22 +562,17 @@ function Workspace() {
 
   return (
     <div className="gt gt-shell">
-      <p className="gt-banner">
-        Prototype dispatch Guertech — données CSV fictives, non branché à
-        NetSuite. Les techniciens n&apos;utilisent pas cette plateforme :
-        envoyez-leur le lien Google Maps.
-      </p>
       <header className="gt-header">
         <div>
-          <p className="gt-kicker">Guertech · Dispatch</p>
+          <p className="gt-kicker">Guertech · Dispatch v2</p>
           <h1>Planification de la journée</h1>
           <p>
-            Deux catégories d&apos;appels : préventif et réactif. Un appel{" "}
-            <strong>planifié</strong> garde son heure 24 h et n&apos;est jamais
-            réordonné.
+            Champs vides au départ.{" "}
+            <strong>Générer une suggestion</strong> remplit seulement ce qui
+            est vide (ratios Q4 + SLA réactif 2 j), sans écraser vos saisies.
+            Ensuite <strong>Générer les routes</strong> calcule les tournées.
           </p>
         </div>
-        <a href="/">Démo Jordan Hale</a>
       </header>
 
       {loadError ? <p className="gt-error">{loadError}</p> : null}
@@ -364,6 +610,7 @@ function Workspace() {
             <input
               type="date"
               value={date}
+              placeholder={DEMO_PLAN_DATE}
               onChange={(event) => setDate(event.target.value)}
             />
           </label>
@@ -373,7 +620,7 @@ function Workspace() {
               <input
                 type="radio"
                 name="move"
-                checked={!moveAssigned}
+                checked={moveAssigned === false}
                 onChange={() => setMoveAssigned(false)}
               />
               Non
@@ -382,11 +629,16 @@ function Workspace() {
               <input
                 type="radio"
                 name="move"
-                checked={moveAssigned}
+                checked={moveAssigned === true}
                 onChange={() => setMoveAssigned(true)}
               />
               Oui — n&apos;unlock pas les planifiés
             </label>
+            {moveAssigned === null ? (
+              <em style={{ color: "var(--gt-muted)", fontSize: "0.8rem" }}>
+                Non choisi — la suggestion proposera Non
+              </em>
+            ) : null}
           </fieldset>
           <label className="gt-field">
             <span>Entretiens préventifs à insérer</span>
@@ -395,42 +647,43 @@ function Workspace() {
               min={0}
               max={40}
               value={pmQuota}
-              onChange={(event) => setPmQuota(Number(event.target.value) || 0)}
+              placeholder={`ex. ${Math.ceil(avgPreventifPerDay)} (ratio Q4)`}
+              onChange={(event) => setPmQuota(event.target.value)}
             />
           </label>
           <label className="gt-field">
             <span>Durée réactif (min)</span>
             <input
               type="number"
-              value={durations.reactif}
-              onChange={(event) =>
-                setDurations((current) => ({
-                  ...current,
-                  reactif: Number(event.target.value) || 90,
-                }))
-              }
+              value={reactifDuration}
+              placeholder="90"
+              onChange={(event) => setReactifDuration(event.target.value)}
             />
           </label>
           <label className="gt-field">
             <span>Durée préventif (min)</span>
             <input
               type="number"
-              value={durations.preventif}
-              onChange={(event) =>
-                setDurations((current) => ({
-                  ...current,
-                  preventif: Number(event.target.value) || 60,
-                }))
-              }
+              value={preventifDuration}
+              placeholder="60"
+              onChange={(event) => setPreventifDuration(event.target.value)}
             />
           </label>
         </div>
         <p style={{ margin: 0, color: "var(--gt-muted)", fontSize: "0.88rem" }}>
-          Réactif : délai {SLA.reactif.delayDays} j, priorité{" "}
-          {SLA.reactif.priority} ({SLA.reactif.netsuiteId}). Préventif :{" "}
-          {SLA.preventif.delayDays} j, priorité {SLA.preventif.priority} (
-          {SLA.preventif.netsuiteId}).
+          Réactif : délai {SLA.reactif.delayDays} j. Fenêtre route soft : 8 h–
+          {ROAD_WINDOW.softEndLabel}. Les champs déjà remplis ne sont jamais
+          écrasés par la suggestion.
         </p>
+        <label className="gt-check" style={{ marginTop: "0.65rem" }}>
+          <input
+            type="checkbox"
+            checked={allowOvertime === true}
+            onChange={(event) => setAllowOvertime(event.target.checked)}
+          />
+          Autoriser les tournées après {ROAD_WINDOW.softEndLabel} (ignorer la
+          contrainte 8 h–5 h à la génération)
+        </label>
       </section>
 
       <div className="gt-grid">
@@ -438,7 +691,7 @@ function Workspace() {
         <CallList
           calls={calls}
           techs={techs}
-          asOfDate={date}
+          asOfDate={effectiveDate}
           filter={filter}
           plannedOnly={plannedOnly}
           search={search}
@@ -467,16 +720,40 @@ function Workspace() {
         </button>
         <button
           type="button"
+          className="gt-btn-ghost"
+          onClick={applySuggestion}
+          disabled={loading || calls.length === 0}
+        >
+          Générer une suggestion
+        </button>
+        <button
+          type="button"
           className="gt-btn"
           onClick={generate}
           disabled={loading || calls.length === 0}
         >
-          {loading ? progress || "Génération…" : "Générer les routes"}
+          {loading
+            ? progress || "Génération…"
+            : suggestionReady
+              ? "Générer les routes"
+              : "Générer les routes"}
         </button>
       </div>
 
       <div ref={resultsRef}>
-        {routes ? <RouteBoard routes={routes} unassigned={unassigned} /> : null}
+        {routes ? (
+          <RouteBoard
+            routes={routes}
+            unassigned={unassigned}
+            suggestions={preventifSuggestions}
+            onAcceptSuggestion={acceptSuggestion}
+            acceptingId={acceptingId}
+            overtimeWarnings={overtimeWarnings}
+            overtimeIgnored={overtimeIgnored || allowOvertime === true}
+            onIgnoreOvertime={ignoreOvertimeWarning}
+            onTrimOvertime={trimOvertimeRoutes}
+          />
+        ) : null}
       </div>
     </div>
   );

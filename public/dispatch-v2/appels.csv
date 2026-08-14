@@ -1,0 +1,214 @@
+id,type,magasin,adresse,ville,region,equipement,equipement_id,netsuite_id,planifie,heure,tech_id,opened_at
+NS-10001,reactif,Couche-Tard Drummondville Brock,"450 rue Brock, Drummondville, QC",Drummondville,Centre-du-Québec,Espresso,2,NS-10001,0,,,2026-08-07
+NS-10002,preventif,Couche-Tard Drummondville Brock,"450 rue Brock, Drummondville, QC",Drummondville,Centre-du-Québec,KIT ENTRETIEN,34,NS-10002,0,,,2026-07-10
+NS-10003,reactif,Tim Hortons Drummondville St-Joseph,"820 boulevard Saint-Joseph, Drummondville, QC",Drummondville,Centre-du-Québec,Machine à Glace,15,NS-10003,0,,,2026-08-12
+NS-10004,preventif,Tim Hortons Drummondville St-Joseph,"820 boulevard Saint-Joseph, Drummondville, QC",Drummondville,Centre-du-Québec,Filtration d'eau,6,NS-10004,0,,,2026-08-01
+NS-10005,reactif,Subway Drummondville Heriot,"315 rue Heriot, Drummondville, QC",Drummondville,Centre-du-Québec,Machine à Glace,15,NS-10005,0,,,2026-08-13
+NS-10006,preventif,Subway Drummondville Heriot,"315 rue Heriot, Drummondville, QC",Drummondville,Centre-du-Québec,Filtration d'eau,6,NS-10006,0,,,2026-08-01
+NS-10007,reactif,IGA Extra Victoriaville,"640 rue Laurier, Victoriaville, QC",Victoriaville,Centre-du-Québec,Machine à Glace,15,NS-10007,0,,,2026-08-13
+NS-10008,preventif,IGA Extra Victoriaville,"640 rue Laurier, Victoriaville, QC",Victoriaville,Centre-du-Québec,Filtration d'eau,6,NS-10008,0,,,2026-08-01
+NS-10009,reactif,Harvey's Nicolet,"112 rue du Portage, Nicolet, QC",Nicolet,Centre-du-Québec,Machine à Glace,15,NS-10009,0,,,2026-08-12
+NS-10010,preventif,Harvey's Nicolet,"112 rue du Portage, Nicolet, QC",Nicolet,Centre-du-Québec,Filtration d'eau,6,NS-10010,0,,,2026-08-01
+NS-10011,reactif,Starbucks Trois-Rivières Forges,"1500 rue des Forges, Trois-Rivières, QC",Trois-Rivières,Mauricie,Machine à Glace,15,NS-10011,0,,,2026-08-12
+NS-10012,preventif,Starbucks Trois-Rivières Forges,"1500 rue des Forges, Trois-Rivières, QC",Trois-Rivières,Mauricie,Filtration d'eau,6,NS-10012,0,,,2026-08-01
+NS-10013,reactif,Métro Trois-Rivières Royale,"225 rue Royale, Trois-Rivières, QC",Trois-Rivières,Mauricie,Machine à Glace,15,NS-10013,0,,,2026-08-12
+NS-10014,preventif,Métro Trois-Rivières Royale,"225 rue Royale, Trois-Rivières, QC",Trois-Rivières,Mauricie,Filtration d'eau,6,NS-10014,0,,,2026-08-01
+NS-10015,reactif,A&W Shawinigan,"980 3e Rue, Shawinigan, QC",Shawinigan,Mauricie,Machine à Glace,15,NS-10015,0,,,2026-08-12
+NS-10016,preventif,A&W Shawinigan,"980 3e Rue, Shawinigan, QC",Shawinigan,Mauricie,Filtration d'eau,6,NS-10016,0,,,2026-08-01
+NS-10017,reactif,McDonald's Sherbrooke King Ouest,"4050 rue King Ouest, Sherbrooke, QC",Sherbrooke,Estrie,Machine à Glace,15,NS-10017,0,,,2026-08-13
+NS-10018,preventif,McDonald's Sherbrooke King Ouest,"4050 rue King Ouest, Sherbrooke, QC",Sherbrooke,Estrie,Filtration d'eau,6,NS-10018,0,,,2026-08-01
+NS-10019,reactif,Couche-Tard Magog Principale,"760 rue Principale Ouest, Magog, QC",Magog,Estrie,Machine à Glace,15,NS-10019,0,,,2026-08-12
+NS-10020,preventif,Couche-Tard Magog Principale,"760 rue Principale Ouest, Magog, QC",Magog,Estrie,Filtration d'eau,6,NS-10020,0,,,2026-08-01
+NS-10021,reactif,Dépanneur 7 jours Sorel Prince,"88 rue du Prince, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Machine à Glace,15,NS-10021,0,,,2026-08-13
+NS-10022,preventif,Dépanneur 7 jours Sorel Prince,"88 rue du Prince, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Filtration d'eau,6,NS-10022,0,,,2026-08-01
+NS-10023,reactif,Tim Hortons Sorel Fiset,"1320 boulevard Fiset, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Machine à Glace,15,NS-10023,0,,,2026-08-12
+NS-10024,preventif,Tim Hortons Sorel Fiset,"1320 boulevard Fiset, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Filtration d'eau,6,NS-10024,0,,,2026-08-01
+NS-10025,reactif,CLSC Bécancour,"1700 boulevard Bécancour, Bécancour, QC",Bécancour,Centre-du-Québec,Machine à Glace,15,NS-10025,0,,,2026-08-12
+NS-10026,preventif,CLSC Bécancour,"1700 boulevard Bécancour, Bécancour, QC",Bécancour,Centre-du-Québec,Filtration d'eau,6,NS-10026,0,,,2026-08-01
+NS-10027,preventif,Entretien planifié — IGA Drummondville,"210 rue Lindsay, Drummondville, QC",Drummondville,Centre-du-Québec,KIT ENTRETIEN,34,NS-10027,1,11:00,5,2026-07-15
+NS-10028,preventif,Entretien planifié — Restaurant du Parc TR,"880 boulevard des Récollets, Trois-Rivières, QC",Trois-Rivières,Mauricie,KIT ENTRETIEN,34,NS-10028,1,10:30,12,2026-07-15
+NS-10029,preventif,Entretien planifié — Hôtel Sherbrooke,"560 12e Avenue Nord, Sherbrooke, QC",Sherbrooke,Estrie,KIT ENTRETIEN,34,NS-10029,1,11:30,18,2026-07-15
+NS-10030,preventif,Entretien planifié — Aréna Sorel,"44 rue Augusta, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,KIT ENTRETIEN,34,NS-10030,1,10:00,21,2026-07-15
+NS-10031,preventif,Couche-Tard Nicolet,"627 rue Notre-Dame, Nicolet, QC",Nicolet,Centre-du-Québec,Espresso,2,NS-10031,0,,,2026-07-01
+NS-10032,preventif,Tim Hortons Drummondville,"644 rue Heriot, Drummondville, QC",Drummondville,Centre-du-Québec,Filtration d'eau,6,NS-10032,0,,,2026-07-01
+NS-10033,preventif,Dépanneur 7 jours Sorel-Tracy,"661 rue Augusta, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Four à Convection,14,NS-10033,0,,,2026-07-20
+NS-10034,preventif,Harvey's Magog,"678 rue Merry Nord, Magog, QC",Magog,Estrie,Four Combi,9,NS-10034,0,,,2026-07-20
+NS-10035,preventif,Harvey's Shawinigan,"695 avenue de la Station, Shawinigan, QC",Shawinigan,Mauricie,KIT ENTRETIEN,34,NS-10035,0,,,2026-07-01
+NS-10036,preventif,Métro Sorel-Tracy,"712 rue Augusta, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Krystaline,29,NS-10036,0,,,2026-07-20
+NS-10037,preventif,Brûlerie locale Sherbrooke,"729 rue King Ouest, Sherbrooke, QC",Sherbrooke,Estrie,Machine à Glace,15,NS-10037,0,,,2026-07-20
+NS-10038,preventif,Brûlerie locale Magog,"746 rue Principale Ouest, Magog, QC",Magog,Estrie,Moulin,17,NS-10038,0,,,2026-07-01
+NS-10039,preventif,Subway Magog,"763 rue Principale Ouest, Magog, QC",Magog,Estrie,Réfrigérateur,28,NS-10039,0,,,2026-08-05
+NS-10040,preventif,Starbucks Nicolet,"780 rue Notre-Dame, Nicolet, QC",Nicolet,Centre-du-Québec,Roller Grill,4,NS-10040,0,,,2026-07-01
+NS-10041,preventif,A&W Shawinigan,"797 3e Rue, Shawinigan, QC",Shawinigan,Mauricie,Thermos,19,NS-10041,0,,,2026-07-01
+NS-10042,preventif,Brûlerie locale Sorel-Tracy,"814 rue du Prince, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Distributeur à eau chaude,22,NS-10042,0,,,2026-07-20
+NS-10043,preventif,Couche-Tard Sorel-Tracy,"831 rue Augusta, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Hotte,10,NS-10043,0,,,2026-07-01
+NS-10044,preventif,A&W Nicolet,"848 rue du Portage, Nicolet, QC",Nicolet,Centre-du-Québec,Lave-vaisselle,26,NS-10044,0,,,2026-08-05
+NS-10045,preventif,IGA Extra Trois-Rivières,"865 boulevard des Récollets, Trois-Rivières, QC",Trois-Rivières,Mauricie,Café filtre,5,NS-10045,0,,,2026-08-05
+NS-10046,preventif,Tim Hortons Magog,"882 rue Principale Ouest, Magog, QC",Magog,Estrie,Espresso,2,NS-10046,0,,,2026-07-20
+NS-10047,preventif,Métro Sorel-Tracy,"899 rue Augusta, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Filtration d'eau,6,NS-10047,0,,,2026-07-20
+NS-10048,preventif,Harvey's Magog,"916 rue Merry Nord, Magog, QC",Magog,Estrie,Four à Convection,14,NS-10048,0,,,2026-07-01
+NS-10049,preventif,Tim Hortons Nicolet,"933 rue du Portage, Nicolet, QC",Nicolet,Centre-du-Québec,Four Combi,9,NS-10049,0,,,2026-07-20
+NS-10050,preventif,Starbucks Trois-Rivières,"950 rue des Forges, Trois-Rivières, QC",Trois-Rivières,Mauricie,KIT ENTRETIEN,34,NS-10050,0,,,2026-08-05
+NS-10051,preventif,Subway Bécancour,"967 boulevard Bécancour, Bécancour, QC",Bécancour,Centre-du-Québec,Krystaline,29,NS-10051,0,,,2026-07-20
+NS-10052,preventif,IGA Extra Sherbrooke,"984 rue King Ouest, Sherbrooke, QC",Sherbrooke,Estrie,Machine à Glace,15,NS-10052,0,,,2026-07-01
+NS-10053,preventif,Dépanneur 7 jours Sorel-Tracy,"1001 rue du Prince, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Moulin,17,NS-10053,0,,,2026-08-05
+NS-10054,preventif,McDonald's Shawinigan,"1018 3e Rue, Shawinigan, QC",Shawinigan,Mauricie,Réfrigérateur,28,NS-10054,0,,,2026-08-05
+NS-10055,preventif,Tim Hortons Sorel-Tracy,"1035 rue Augusta, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Roller Grill,4,NS-10055,0,,,2026-07-01
+NS-10056,preventif,Harvey's Sorel-Tracy,"1052 rue du Prince, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Thermos,19,NS-10056,0,,,2026-07-01
+NS-10057,preventif,Couche-Tard Bécancour,"1069 boulevard Bécancour, Bécancour, QC",Bécancour,Centre-du-Québec,Distributeur à eau chaude,22,NS-10057,0,,,2026-07-20
+NS-10058,preventif,Dépanneur 7 jours Trois-Rivières,"1086 rue Hart, Trois-Rivières, QC",Trois-Rivières,Mauricie,Hotte,10,NS-10058,0,,,2026-08-05
+NS-10059,preventif,Subway Magog,"1103 rue Principale Ouest, Magog, QC",Magog,Estrie,Lave-vaisselle,26,NS-10059,0,,,2026-07-01
+NS-10060,preventif,IGA Extra Magog,"1120 rue Principale Ouest, Magog, QC",Magog,Estrie,Café filtre,5,NS-10060,0,,,2026-07-01
+NS-10061,preventif,Starbucks Trois-Rivières,"1137 boulevard des Récollets, Trois-Rivières, QC",Trois-Rivières,Mauricie,Espresso,2,NS-10061,0,,,2026-07-20
+NS-10062,preventif,Dépanneur 7 jours Sorel-Tracy,"1154 boulevard Fiset, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Filtration d'eau,6,NS-10062,0,,,2026-07-01
+NS-10063,preventif,Starbucks Magog,"1171 rue Principale Ouest, Magog, QC",Magog,Estrie,Four à Convection,14,NS-10063,0,,,2026-07-01
+NS-10064,preventif,Starbucks Shawinigan,"1188 3e Rue, Shawinigan, QC",Shawinigan,Mauricie,Four Combi,9,NS-10064,0,,,2026-07-20
+NS-10065,preventif,A&W Magog,"1205 rue Merry Nord, Magog, QC",Magog,Estrie,KIT ENTRETIEN,34,NS-10065,0,,,2026-07-20
+NS-10066,preventif,Tim Hortons Sorel-Tracy,"1222 rue Augusta, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Krystaline,29,NS-10066,0,,,2026-08-05
+NS-10067,preventif,Tim Hortons Sorel-Tracy,"1239 rue du Prince, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Machine à Glace,15,NS-10067,0,,,2026-07-20
+NS-10068,preventif,Restaurant du Parc Bécancour,"1256 boulevard Bécancour, Bécancour, QC",Bécancour,Centre-du-Québec,Moulin,17,NS-10068,0,,,2026-08-05
+NS-10069,preventif,Brûlerie locale Sorel-Tracy,"1273 rue Augusta, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Réfrigérateur,28,NS-10069,0,,,2026-08-05
+NS-10070,preventif,Tim Hortons Sorel-Tracy,"1290 boulevard Fiset, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Roller Grill,4,NS-10070,0,,,2026-08-05
+NS-10071,preventif,Métro Nicolet,"1307 rue Notre-Dame, Nicolet, QC",Nicolet,Centre-du-Québec,Thermos,19,NS-10071,0,,,2026-08-05
+NS-10072,preventif,Tim Hortons Victoriaville,"1324 rue Laurier, Victoriaville, QC",Victoriaville,Centre-du-Québec,Distributeur à eau chaude,22,NS-10072,0,,,2026-07-01
+NS-10073,preventif,IGA Extra Trois-Rivières,"1341 rue Hart, Trois-Rivières, QC",Trois-Rivières,Mauricie,Hotte,10,NS-10073,0,,,2026-07-01
+NS-10074,preventif,Dépanneur 7 jours Sherbrooke,"1358 rue King Ouest, Sherbrooke, QC",Sherbrooke,Estrie,Lave-vaisselle,26,NS-10074,0,,,2026-07-01
+NS-10075,preventif,Starbucks Sorel-Tracy,"1375 rue Augusta, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Café filtre,5,NS-10075,0,,,2026-07-20
+NS-10076,preventif,Métro Sherbrooke,"1392 rue King Ouest, Sherbrooke, QC",Sherbrooke,Estrie,Espresso,2,NS-10076,0,,,2026-08-05
+NS-10077,preventif,IGA Extra Shawinigan,"1409 avenue de la Station, Shawinigan, QC",Shawinigan,Mauricie,Filtration d'eau,6,NS-10077,0,,,2026-08-05
+NS-10078,preventif,Subway Bécancour,"1426 avenue des Érables, Bécancour, QC",Bécancour,Centre-du-Québec,Four à Convection,14,NS-10078,0,,,2026-07-01
+NS-10079,preventif,McDonald's Bécancour,"1443 avenue des Érables, Bécancour, QC",Bécancour,Centre-du-Québec,Four Combi,9,NS-10079,0,,,2026-07-01
+NS-10080,preventif,IGA Extra Shawinigan,"1460 3e Rue, Shawinigan, QC",Shawinigan,Mauricie,KIT ENTRETIEN,34,NS-10080,0,,,2026-08-05
+NS-10081,preventif,Harvey's Sorel-Tracy,"1477 rue du Prince, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Krystaline,29,NS-10081,0,,,2026-07-20
+NS-10082,preventif,McDonald's Sorel-Tracy,"1494 rue du Prince, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Machine à Glace,15,NS-10082,0,,,2026-07-01
+NS-10083,preventif,Starbucks Shawinigan,"1511 3e Rue, Shawinigan, QC",Shawinigan,Mauricie,Moulin,17,NS-10083,0,,,2026-07-01
+NS-10084,preventif,Restaurant du Parc Victoriaville,"1528 rue Laurier, Victoriaville, QC",Victoriaville,Centre-du-Québec,Réfrigérateur,28,NS-10084,0,,,2026-08-05
+NS-10085,preventif,Subway Victoriaville,"1545 rue Notre-Dame, Victoriaville, QC",Victoriaville,Centre-du-Québec,Roller Grill,4,NS-10085,0,,,2026-07-20
+NS-10086,preventif,Couche-Tard Sorel-Tracy,"1562 rue Augusta, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Thermos,19,NS-10086,0,,,2026-07-20
+NS-10087,preventif,McDonald's Sorel-Tracy,"1579 rue du Prince, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Distributeur à eau chaude,22,NS-10087,0,,,2026-08-05
+NS-10088,preventif,A&W Sherbrooke,"1596 12e Avenue Nord, Sherbrooke, QC",Sherbrooke,Estrie,Hotte,10,NS-10088,0,,,2026-07-01
+NS-10089,preventif,Tim Hortons Sorel-Tracy,"1613 boulevard Fiset, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Lave-vaisselle,26,NS-10089,0,,,2026-08-05
+NS-10090,preventif,Subway Trois-Rivières,"1630 rue des Forges, Trois-Rivières, QC",Trois-Rivières,Mauricie,Café filtre,5,NS-10090,0,,,2026-08-05
+NS-10091,preventif,Tim Hortons Nicolet,"1647 rue Notre-Dame, Nicolet, QC",Nicolet,Centre-du-Québec,Espresso,2,NS-10091,0,,,2026-08-05
+NS-10092,preventif,A&W Sorel-Tracy,"1664 boulevard Fiset, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Filtration d'eau,6,NS-10092,0,,,2026-08-05
+NS-10093,preventif,Starbucks Nicolet,"1681 rue Notre-Dame, Nicolet, QC",Nicolet,Centre-du-Québec,Four à Convection,14,NS-10093,0,,,2026-07-20
+NS-10094,preventif,Harvey's Sherbrooke,"1698 rue King Ouest, Sherbrooke, QC",Sherbrooke,Estrie,Four Combi,9,NS-10094,0,,,2026-08-05
+NS-10095,preventif,Harvey's Sorel-Tracy,"1715 rue du Prince, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,KIT ENTRETIEN,34,NS-10095,0,,,2026-08-05
+NS-10096,preventif,Métro Sherbrooke,"1732 rue King Est, Sherbrooke, QC",Sherbrooke,Estrie,Krystaline,29,NS-10096,0,,,2026-07-20
+NS-10097,preventif,Subway Nicolet,"1749 rue du Portage, Nicolet, QC",Nicolet,Centre-du-Québec,Machine à Glace,15,NS-10097,0,,,2026-07-01
+NS-10098,preventif,Métro Drummondville,"1766 rue Lindsay, Drummondville, QC",Drummondville,Centre-du-Québec,Moulin,17,NS-10098,0,,,2026-07-20
+NS-10099,preventif,A&W Trois-Rivières,"1783 rue Hart, Trois-Rivières, QC",Trois-Rivières,Mauricie,Réfrigérateur,28,NS-10099,0,,,2026-08-05
+NS-10100,preventif,McDonald's Shawinigan,"100 avenue de la Station, Shawinigan, QC",Shawinigan,Mauricie,Roller Grill,4,NS-10100,0,,,2026-07-20
+NS-10101,preventif,Dépanneur 7 jours Magog,"117 rue Principale Ouest, Magog, QC",Magog,Estrie,Thermos,19,NS-10101,0,,,2026-08-05
+NS-10102,preventif,McDonald's Sorel-Tracy,"134 rue du Prince, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Distributeur à eau chaude,22,NS-10102,0,,,2026-07-20
+NS-10103,preventif,Restaurant du Parc Sherbrooke,"151 rue King Est, Sherbrooke, QC",Sherbrooke,Estrie,Hotte,10,NS-10103,0,,,2026-07-20
+NS-10104,preventif,Couche-Tard Drummondville,"168 rue Heriot, Drummondville, QC",Drummondville,Centre-du-Québec,Lave-vaisselle,26,NS-10104,0,,,2026-08-05
+NS-10105,preventif,Dépanneur 7 jours Victoriaville,"185 boulevard des Bois-Francs, Victoriaville, QC",Victoriaville,Centre-du-Québec,Café filtre,5,NS-10105,0,,,2026-08-05
+NS-10106,preventif,Restaurant du Parc Sherbrooke,"202 12e Avenue Nord, Sherbrooke, QC",Sherbrooke,Estrie,Espresso,2,NS-10106,0,,,2026-07-20
+NS-10107,preventif,Subway Sherbrooke,"219 12e Avenue Nord, Sherbrooke, QC",Sherbrooke,Estrie,Filtration d'eau,6,NS-10107,0,,,2026-07-01
+NS-10108,preventif,McDonald's Trois-Rivières,"236 rue des Forges, Trois-Rivières, QC",Trois-Rivières,Mauricie,Four à Convection,14,NS-10108,0,,,2026-07-01
+NS-10109,preventif,IGA Extra Nicolet,"253 rue Notre-Dame, Nicolet, QC",Nicolet,Centre-du-Québec,Four Combi,9,NS-10109,0,,,2026-07-20
+NS-10110,preventif,A&W Bécancour,"270 avenue des Érables, Bécancour, QC",Bécancour,Centre-du-Québec,KIT ENTRETIEN,34,NS-10110,0,,,2026-08-05
+NS-10111,preventif,Subway Sorel-Tracy,"287 rue du Prince, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Krystaline,29,NS-10111,0,,,2026-08-05
+NS-10112,preventif,Starbucks Victoriaville,"304 rue Laurier, Victoriaville, QC",Victoriaville,Centre-du-Québec,Machine à Glace,15,NS-10112,0,,,2026-08-05
+NS-10113,preventif,Couche-Tard Victoriaville,"321 rue Laurier, Victoriaville, QC",Victoriaville,Centre-du-Québec,Moulin,17,NS-10113,0,,,2026-07-01
+NS-10114,preventif,Subway Sorel-Tracy,"338 rue du Prince, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Réfrigérateur,28,NS-10114,0,,,2026-07-01
+NS-10115,preventif,IGA Extra Sorel-Tracy,"355 boulevard Fiset, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Roller Grill,4,NS-10115,0,,,2026-07-20
+NS-10116,preventif,Restaurant du Parc Victoriaville,"372 boulevard des Bois-Francs, Victoriaville, QC",Victoriaville,Centre-du-Québec,Thermos,19,NS-10116,0,,,2026-07-01
+NS-10117,preventif,Subway Sherbrooke,"389 rue King Est, Sherbrooke, QC",Sherbrooke,Estrie,Distributeur à eau chaude,22,NS-10117,0,,,2026-07-01
+NS-10118,preventif,Restaurant du Parc Trois-Rivières,"406 rue Hart, Trois-Rivières, QC",Trois-Rivières,Mauricie,Hotte,10,NS-10118,0,,,2026-07-20
+NS-10119,preventif,IGA Extra Victoriaville,"423 boulevard des Bois-Francs, Victoriaville, QC",Victoriaville,Centre-du-Québec,Lave-vaisselle,26,NS-10119,0,,,2026-07-01
+NS-10120,preventif,Harvey's Sorel-Tracy,"440 rue Augusta, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Café filtre,5,NS-10120,0,,,2026-07-20
+NS-10121,preventif,Tim Hortons Sorel-Tracy,"457 boulevard Fiset, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Espresso,2,NS-10121,0,,,2026-08-05
+NS-10122,preventif,Harvey's Trois-Rivières,"474 boulevard des Récollets, Trois-Rivières, QC",Trois-Rivières,Mauricie,Filtration d'eau,6,NS-10122,0,,,2026-07-01
+NS-10123,preventif,Couche-Tard Drummondville,"491 rue Power, Drummondville, QC",Drummondville,Centre-du-Québec,Four à Convection,14,NS-10123,0,,,2026-08-05
+NS-10124,preventif,IGA Extra Sorel-Tracy,"508 rue Augusta, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Four Combi,9,NS-10124,0,,,2026-07-01
+NS-10125,preventif,Subway Drummondville,"525 boulevard Saint-Joseph, Drummondville, QC",Drummondville,Centre-du-Québec,KIT ENTRETIEN,34,NS-10125,0,,,2026-07-01
+NS-10126,preventif,Dépanneur 7 jours Sorel-Tracy,"542 rue Augusta, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Krystaline,29,NS-10126,0,,,2026-07-20
+NS-10127,preventif,Couche-Tard Sorel-Tracy,"559 rue du Prince, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Machine à Glace,15,NS-10127,0,,,2026-07-20
+NS-10128,preventif,Subway Sorel-Tracy,"576 rue Augusta, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Moulin,17,NS-10128,0,,,2026-07-20
+NS-10129,preventif,Dépanneur 7 jours Shawinigan,"593 avenue de la Station, Shawinigan, QC",Shawinigan,Mauricie,Réfrigérateur,28,NS-10129,0,,,2026-08-05
+NS-10130,preventif,Harvey's Sorel-Tracy,"610 rue du Prince, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Roller Grill,4,NS-10130,0,,,2026-07-01
+NS-10131,preventif,Métro Sorel-Tracy,"627 boulevard Fiset, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Thermos,19,NS-10131,0,,,2026-07-20
+NS-10132,preventif,A&W Trois-Rivières,"644 rue des Forges, Trois-Rivières, QC",Trois-Rivières,Mauricie,Distributeur à eau chaude,22,NS-10132,0,,,2026-07-01
+NS-10133,preventif,Starbucks Nicolet,"661 rue du Portage, Nicolet, QC",Nicolet,Centre-du-Québec,Hotte,10,NS-10133,0,,,2026-08-05
+NS-10134,preventif,Starbucks Nicolet,"678 rue du Portage, Nicolet, QC",Nicolet,Centre-du-Québec,Lave-vaisselle,26,NS-10134,0,,,2026-07-20
+NS-10135,preventif,Brûlerie locale Nicolet,"695 rue Notre-Dame, Nicolet, QC",Nicolet,Centre-du-Québec,Café filtre,5,NS-10135,0,,,2026-07-20
+NS-10136,preventif,Dépanneur 7 jours Trois-Rivières,"712 rue des Forges, Trois-Rivières, QC",Trois-Rivières,Mauricie,Espresso,2,NS-10136,0,,,2026-07-20
+NS-10137,preventif,Tim Hortons Shawinigan,"729 avenue de la Station, Shawinigan, QC",Shawinigan,Mauricie,Filtration d'eau,6,NS-10137,0,,,2026-07-01
+NS-10138,preventif,Subway Shawinigan,"746 avenue de la Station, Shawinigan, QC",Shawinigan,Mauricie,Four à Convection,14,NS-10138,0,,,2026-07-01
+NS-10139,preventif,Couche-Tard Shawinigan,"763 3e Rue, Shawinigan, QC",Shawinigan,Mauricie,Four Combi,9,NS-10139,0,,,2026-07-20
+NS-10140,preventif,Tim Hortons Magog,"780 rue Merry Nord, Magog, QC",Magog,Estrie,KIT ENTRETIEN,34,NS-10140,0,,,2026-07-01
+NS-10141,preventif,Harvey's Bécancour,"797 boulevard Bécancour, Bécancour, QC",Bécancour,Centre-du-Québec,Krystaline,29,NS-10141,0,,,2026-07-20
+NS-10142,preventif,Dépanneur 7 jours Victoriaville,"814 rue Laurier, Victoriaville, QC",Victoriaville,Centre-du-Québec,Machine à Glace,15,NS-10142,0,,,2026-07-20
+NS-10143,preventif,McDonald's Magog,"831 rue Merry Nord, Magog, QC",Magog,Estrie,Moulin,17,NS-10143,0,,,2026-08-05
+NS-10144,preventif,Starbucks Sherbrooke,"848 rue King Ouest, Sherbrooke, QC",Sherbrooke,Estrie,Réfrigérateur,28,NS-10144,0,,,2026-08-05
+NS-10145,preventif,A&W Shawinigan,"865 3e Rue, Shawinigan, QC",Shawinigan,Mauricie,Roller Grill,4,NS-10145,0,,,2026-08-05
+NS-10146,preventif,McDonald's Shawinigan,"882 avenue de la Station, Shawinigan, QC",Shawinigan,Mauricie,Thermos,19,NS-10146,0,,,2026-07-01
+NS-10147,preventif,Dépanneur 7 jours Trois-Rivières,"899 rue Hart, Trois-Rivières, QC",Trois-Rivières,Mauricie,Distributeur à eau chaude,22,NS-10147,0,,,2026-07-20
+NS-10148,preventif,A&W Sorel-Tracy,"916 boulevard Fiset, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Hotte,10,NS-10148,0,,,2026-07-20
+NS-10149,preventif,Tim Hortons Sorel-Tracy,"933 rue Augusta, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Lave-vaisselle,26,NS-10149,0,,,2026-07-20
+NS-10150,preventif,Métro Sorel-Tracy,"950 rue Augusta, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Café filtre,5,NS-10150,0,,,2026-07-20
+NS-10151,preventif,Restaurant du Parc Sherbrooke,"967 rue King Ouest, Sherbrooke, QC",Sherbrooke,Estrie,Espresso,2,NS-10151,0,,,2026-07-01
+NS-10152,preventif,A&W Sherbrooke,"984 rue King Est, Sherbrooke, QC",Sherbrooke,Estrie,Filtration d'eau,6,NS-10152,0,,,2026-07-20
+NS-10153,preventif,Starbucks Sorel-Tracy,"1001 rue du Prince, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Four à Convection,14,NS-10153,0,,,2026-07-20
+NS-10154,preventif,Subway Shawinigan,"1018 3e Rue, Shawinigan, QC",Shawinigan,Mauricie,Four Combi,9,NS-10154,0,,,2026-08-05
+NS-10155,preventif,Dépanneur 7 jours Victoriaville,"1035 rue Laurier, Victoriaville, QC",Victoriaville,Centre-du-Québec,KIT ENTRETIEN,34,NS-10155,0,,,2026-08-05
+NS-10156,preventif,Starbucks Sherbrooke,"1052 12e Avenue Nord, Sherbrooke, QC",Sherbrooke,Estrie,Krystaline,29,NS-10156,0,,,2026-07-20
+NS-10157,preventif,Dépanneur 7 jours Trois-Rivières,"1069 rue des Forges, Trois-Rivières, QC",Trois-Rivières,Mauricie,Machine à Glace,15,NS-10157,0,,,2026-07-01
+NS-10158,preventif,Brûlerie locale Sherbrooke,"1086 rue King Ouest, Sherbrooke, QC",Sherbrooke,Estrie,Moulin,17,NS-10158,0,,,2026-07-01
+NS-10159,preventif,A&W Sorel-Tracy,"1103 rue du Prince, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Réfrigérateur,28,NS-10159,0,,,2026-08-05
+NS-10160,preventif,Tim Hortons Shawinigan,"1120 avenue de la Station, Shawinigan, QC",Shawinigan,Mauricie,Roller Grill,4,NS-10160,0,,,2026-07-20
+NS-10161,preventif,Harvey's Sherbrooke,"1137 12e Avenue Nord, Sherbrooke, QC",Sherbrooke,Estrie,Thermos,19,NS-10161,0,,,2026-08-05
+NS-10162,preventif,Couche-Tard Sorel-Tracy,"1154 boulevard Fiset, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Distributeur à eau chaude,22,NS-10162,0,,,2026-07-20
+NS-10163,preventif,Harvey's Magog,"1171 rue Principale Ouest, Magog, QC",Magog,Estrie,Hotte,10,NS-10163,0,,,2026-07-01
+NS-10164,preventif,Tim Hortons Sorel-Tracy,"1188 rue Augusta, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Lave-vaisselle,26,NS-10164,0,,,2026-07-20
+NS-10165,preventif,Couche-Tard Magog,"1205 rue Merry Nord, Magog, QC",Magog,Estrie,Café filtre,5,NS-10165,0,,,2026-07-01
+NS-10166,preventif,McDonald's Trois-Rivières,"1222 rue des Forges, Trois-Rivières, QC",Trois-Rivières,Mauricie,Espresso,2,NS-10166,0,,,2026-07-01
+NS-10167,preventif,Subway Trois-Rivières,"1239 rue Royale, Trois-Rivières, QC",Trois-Rivières,Mauricie,Filtration d'eau,6,NS-10167,0,,,2026-08-05
+NS-10168,preventif,Restaurant du Parc Magog,"1256 rue Merry Nord, Magog, QC",Magog,Estrie,Four à Convection,14,NS-10168,0,,,2026-07-01
+NS-10169,preventif,IGA Extra Nicolet,"1273 rue du Portage, Nicolet, QC",Nicolet,Centre-du-Québec,Four Combi,9,NS-10169,0,,,2026-07-20
+NS-10170,preventif,Métro Sorel-Tracy,"1290 rue Augusta, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,KIT ENTRETIEN,34,NS-10170,0,,,2026-07-01
+NS-10171,preventif,Harvey's Sorel-Tracy,"1307 rue Augusta, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Krystaline,29,NS-10171,0,,,2026-08-05
+NS-10172,preventif,Métro Magog,"1324 rue Merry Nord, Magog, QC",Magog,Estrie,Machine à Glace,15,NS-10172,0,,,2026-07-20
+NS-10173,preventif,Métro Sorel-Tracy,"1341 rue Augusta, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Moulin,17,NS-10173,0,,,2026-07-20
+NS-10174,preventif,Couche-Tard Sorel-Tracy,"1358 boulevard Fiset, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Réfrigérateur,28,NS-10174,0,,,2026-08-05
+NS-10175,preventif,Starbucks Sorel-Tracy,"1375 rue Augusta, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Roller Grill,4,NS-10175,0,,,2026-07-20
+NS-10176,preventif,Couche-Tard Victoriaville,"1392 boulevard des Bois-Francs, Victoriaville, QC",Victoriaville,Centre-du-Québec,Thermos,19,NS-10176,0,,,2026-07-20
+NS-10177,preventif,Subway Sorel-Tracy,"1409 rue du Prince, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Distributeur à eau chaude,22,NS-10177,0,,,2026-07-01
+NS-10178,preventif,Tim Hortons Magog,"1426 rue Principale Ouest, Magog, QC",Magog,Estrie,Hotte,10,NS-10178,0,,,2026-07-01
+NS-10179,preventif,Subway Sorel-Tracy,"1443 rue Augusta, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Lave-vaisselle,26,NS-10179,0,,,2026-07-01
+NS-10180,preventif,McDonald's Sorel-Tracy,"1460 rue Augusta, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Café filtre,5,NS-10180,0,,,2026-07-01
+NS-10181,preventif,Dépanneur 7 jours Sherbrooke,"1477 12e Avenue Nord, Sherbrooke, QC",Sherbrooke,Estrie,Espresso,2,NS-10181,0,,,2026-08-05
+NS-10182,preventif,Starbucks Magog,"1494 rue Merry Nord, Magog, QC",Magog,Estrie,Filtration d'eau,6,NS-10182,0,,,2026-08-05
+NS-10183,preventif,Tim Hortons Shawinigan,"1511 3e Rue, Shawinigan, QC",Shawinigan,Mauricie,Four à Convection,14,NS-10183,0,,,2026-08-05
+NS-10184,preventif,IGA Extra Drummondville,"1528 rue Brock, Drummondville, QC",Drummondville,Centre-du-Québec,Four Combi,9,NS-10184,0,,,2026-07-01
+NS-10185,preventif,Tim Hortons Sorel-Tracy,"1545 boulevard Fiset, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,KIT ENTRETIEN,34,NS-10185,0,,,2026-08-05
+NS-10186,preventif,Métro Sorel-Tracy,"1562 rue Augusta, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Krystaline,29,NS-10186,0,,,2026-08-05
+NS-10187,preventif,Métro Sherbrooke,"1579 12e Avenue Nord, Sherbrooke, QC",Sherbrooke,Estrie,Machine à Glace,15,NS-10187,0,,,2026-08-05
+NS-10188,preventif,Restaurant du Parc Shawinigan,"1596 3e Rue, Shawinigan, QC",Shawinigan,Mauricie,Moulin,17,NS-10188,0,,,2026-07-20
+NS-10189,preventif,Starbucks Victoriaville,"1613 boulevard des Bois-Francs, Victoriaville, QC",Victoriaville,Centre-du-Québec,Réfrigérateur,28,NS-10189,0,,,2026-07-20
+NS-10190,preventif,Tim Hortons Sherbrooke,"1630 rue King Est, Sherbrooke, QC",Sherbrooke,Estrie,Roller Grill,4,NS-10190,0,,,2026-07-20
+NS-10191,preventif,Harvey's Sherbrooke,"1647 12e Avenue Nord, Sherbrooke, QC",Sherbrooke,Estrie,Thermos,19,NS-10191,0,,,2026-07-01
+NS-10192,preventif,Métro Shawinigan,"1664 avenue de la Station, Shawinigan, QC",Shawinigan,Mauricie,Distributeur à eau chaude,22,NS-10192,0,,,2026-07-20
+NS-10193,preventif,Harvey's Sherbrooke,"1681 rue King Ouest, Sherbrooke, QC",Sherbrooke,Estrie,Hotte,10,NS-10193,0,,,2026-07-01
+NS-10194,preventif,Dépanneur 7 jours Shawinigan,"1698 avenue de la Station, Shawinigan, QC",Shawinigan,Mauricie,Lave-vaisselle,26,NS-10194,0,,,2026-07-01
+NS-10195,preventif,Dépanneur 7 jours Trois-Rivières,"1715 rue Royale, Trois-Rivières, QC",Trois-Rivières,Mauricie,Café filtre,5,NS-10195,0,,,2026-07-20
+NS-10196,preventif,Brûlerie locale Victoriaville,"1732 rue Laurier, Victoriaville, QC",Victoriaville,Centre-du-Québec,Espresso,2,NS-10196,0,,,2026-07-20
+NS-10197,preventif,Harvey's Sorel-Tracy,"1749 rue Augusta, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Filtration d'eau,6,NS-10197,0,,,2026-07-20
+NS-10198,preventif,Couche-Tard Bécancour,"1766 avenue des Érables, Bécancour, QC",Bécancour,Centre-du-Québec,Four à Convection,14,NS-10198,0,,,2026-08-05
+NS-10199,preventif,Métro Shawinigan,"1783 avenue de la Station, Shawinigan, QC",Shawinigan,Mauricie,Four Combi,9,NS-10199,0,,,2026-07-01
+NS-10200,preventif,Couche-Tard Shawinigan,"100 3e Rue, Shawinigan, QC",Shawinigan,Mauricie,KIT ENTRETIEN,34,NS-10200,0,,,2026-08-05
+NS-10201,preventif,Tim Hortons Sorel-Tracy,"117 boulevard Fiset, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Krystaline,29,NS-10201,0,,,2026-08-05
+NS-10202,preventif,A&W Sorel-Tracy,"134 rue Augusta, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Machine à Glace,15,NS-10202,0,,,2026-08-05
+NS-10203,preventif,Tim Hortons Victoriaville,"151 boulevard des Bois-Francs, Victoriaville, QC",Victoriaville,Centre-du-Québec,Moulin,17,NS-10203,0,,,2026-07-20
+NS-10204,preventif,A&W Bécancour,"168 boulevard Bécancour, Bécancour, QC",Bécancour,Centre-du-Québec,Réfrigérateur,28,NS-10204,0,,,2026-07-20
+NS-10205,preventif,A&W Shawinigan,"185 3e Rue, Shawinigan, QC",Shawinigan,Mauricie,Roller Grill,4,NS-10205,0,,,2026-07-01
+NS-10206,preventif,Couche-Tard Bécancour,"202 boulevard Bécancour, Bécancour, QC",Bécancour,Centre-du-Québec,Thermos,19,NS-10206,0,,,2026-08-05
+NS-10207,preventif,Harvey's Sherbrooke,"219 12e Avenue Nord, Sherbrooke, QC",Sherbrooke,Estrie,Distributeur à eau chaude,22,NS-10207,0,,,2026-08-05
+NS-10208,preventif,IGA Extra Shawinigan,"236 3e Rue, Shawinigan, QC",Shawinigan,Mauricie,Hotte,10,NS-10208,0,,,2026-08-05
+NS-10209,preventif,Harvey's Sherbrooke,"253 rue King Est, Sherbrooke, QC",Sherbrooke,Estrie,Lave-vaisselle,26,NS-10209,0,,,2026-08-05
+NS-10210,preventif,A&W Sorel-Tracy,"270 boulevard Fiset, Sorel-Tracy, QC",Sorel-Tracy,Montérégie,Café filtre,5,NS-10210,0,,,2026-07-01
+NS-10211,preventif,Dépanneur 7 jours Trois-Rivières,"287 boulevard des Récollets, Trois-Rivières, QC",Trois-Rivières,Mauricie,Espresso,2,NS-10211,0,,,2026-08-05
+NS-10212,preventif,A&W Magog,"304 rue Merry Nord, Magog, QC",Magog,Estrie,Filtration d'eau,6,NS-10212,0,,,2026-07-20
+NS-10213,preventif,McDonald's Magog,"321 rue Merry Nord, Magog, QC",Magog,Estrie,Four à Convection,14,NS-10213,0,,,2026-07-01
