@@ -125,7 +125,7 @@ export function assignDay(options: {
   ];
   const reactifToday = regionFirst(overdueFirst, regions).slice(
     0,
-    Math.max(8, present.length * 4),
+    Math.max(4, present.length * 2),
   );
 
   for (const appel of reactifToday) {

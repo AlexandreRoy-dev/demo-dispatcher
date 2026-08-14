@@ -1,7 +1,7 @@
 "use client";
 
 import { APIProvider } from "@vis.gl/react-google-maps";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { CallList } from "@/components/guertech/CallList";
 import { RouteBoard } from "@/components/guertech/RouteBoard";
 import { TechRoster } from "@/components/guertech/TechRoster";
@@ -19,7 +19,14 @@ import {
   SLA,
 } from "@/lib/guertech/constants";
 import { loadAppels } from "@/lib/guertech/csv";
-import type { Appel, CallType, Tech, TechRoute, Unassigned } from "@/lib/guertech/types";
+import type {
+  Appel,
+  CallType,
+  DayStop,
+  Tech,
+  TechRoute,
+  Unassigned,
+} from "@/lib/guertech/types";
 import type { OptimizeRouteResponse } from "@/lib/types";
 
 function todayIsoDate(): string {
@@ -47,6 +54,79 @@ async function fetchRoute(payload: {
   return data;
 }
 
+async function buildTechRoute(
+  tech: Tech,
+  stops: DayStop[],
+): Promise<TechRoute> {
+  if (stops.length === 0) {
+    return { tech, stops: [], google: null, error: null };
+  }
+
+  const limited = [
+    ...stops.filter((stop) => stop.pinned),
+    ...stops.filter((stop) => !stop.pinned),
+  ].slice(0, 8);
+
+  const movable = limited.filter((stop) => !stop.pinned);
+  let movableOrder = movable.map((stop) => stop.appel.id);
+
+  try {
+    if (movable.length >= 2) {
+      const optimized = await fetchRoute({
+        start: tech.start,
+        end: tech.end || tech.start,
+        stops: movable.map((stop) => ({
+          address: stop.appel.adresse,
+          minutesOnSite: stop.minutesOnSite,
+        })),
+        optimize: true,
+      });
+      movableOrder = optimized.waypointOrder
+        .map((index) => movable[index]?.appel.id)
+        .filter((id): id is string => Boolean(id));
+      if (movableOrder.length === 0) {
+        movableOrder = movable.map((stop) => stop.appel.id);
+      }
+    }
+
+    const merged = mergePinnedAroundMovable(
+      limited,
+      movableOrder,
+      tech.startHour,
+      tech.endHour,
+    );
+
+    const google = await fetchRoute({
+      start: tech.start,
+      end: tech.end || tech.start,
+      stops: merged.map((stop) => ({
+        address: stop.appel.adresse,
+        minutesOnSite: stop.minutesOnSite,
+      })),
+      optimize: false,
+      departureTime: new Date().toISOString(),
+    });
+
+    return { tech, stops: merged, google, error: null };
+  } catch (err) {
+    const merged = mergePinnedAroundMovable(
+      limited,
+      movableOrder,
+      tech.startHour,
+      tech.endHour,
+    );
+    return {
+      tech,
+      stops: merged,
+      google: null,
+      error:
+        err instanceof Error
+          ? err.message
+          : "Google n'a pas pu calculer cette tournée.",
+    };
+  }
+}
+
 function Workspace() {
   const [calls, setCalls] = useState<Appel[]>([]);
   const [techs, setTechs] = useState<Tech[]>(() => createDefaultTechs());
@@ -59,10 +139,12 @@ function Workspace() {
   const [plannedOnly, setPlannedOnly] = useState(false);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
+  const [progress, setProgress] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [toast, setToast] = useState<string | null>(null);
   const [routes, setRoutes] = useState<TechRoute[] | null>(null);
   const [unassigned, setUnassigned] = useState<Unassigned[]>([]);
+  const resultsRef = useRef<HTMLDivElement>(null);
 
   const businessDaysLeft = useMemo(
     () => countBusinessDays(date, QUARTER.deadline),
@@ -81,7 +163,9 @@ function Workspace() {
     loadAppels()
       .then(setCalls)
       .catch((err: unknown) =>
-        setLoadError(err instanceof Error ? err.message : "Chargement impossible"),
+        setLoadError(
+          err instanceof Error ? err.message : "Chargement impossible",
+        ),
       );
   }, []);
 
@@ -129,17 +213,29 @@ function Workspace() {
   async function generate() {
     setError(null);
     setToast(null);
-    if (missingPlannedTime.length > 0) {
-      setError(
-        `${missingPlannedTime.length} appel(s) planifié(s) sans heure 24 h. Complétez-les avant de générer.`,
-      );
+
+    if (calls.length === 0) {
+      setError("Liste d'appels encore vide — attendez le chargement du CSV.");
       return;
     }
 
+    let workingCalls = calls;
+    if (missingPlannedTime.length > 0) {
+      workingCalls = calls.map((item) =>
+        item.planifie && !item.heure ? { ...item, heure: "10:00" } : item,
+      );
+      setCalls(workingCalls);
+      setToast(
+        `${missingPlannedTime.length} appel(s) planifié(s) sans heure — 10:00 appliqué automatiquement.`,
+      );
+    }
+
     setLoading(true);
+    setProgress("Répartition des appels…");
+
     try {
       const assigned = assignDay({
-        calls,
+        calls: workingCalls,
         techs,
         pmQuota,
         durations,
@@ -148,70 +244,68 @@ function Workspace() {
       setUnassigned(assigned.unassigned);
 
       const present = techs.filter((tech) => tech.present);
-      const nextRoutes: TechRoute[] = [];
-
-      for (const tech of present) {
-        const stops = assigned.byTech[tech.id] ?? [];
-        if (stops.length === 0) {
-          nextRoutes.push({ tech, stops: [], google: null, error: null });
-          continue;
-        }
-
+      const draft: TechRoute[] = present.map((tech) => {
+        const stops = (assigned.byTech[tech.id] ?? []).slice(0, 8);
         const movable = stops.filter((stop) => !stop.pinned);
-        let movableOrder = movable.map((stop) => stop.appel.id);
+        const merged = mergePinnedAroundMovable(
+          stops,
+          movable.map((stop) => stop.appel.id),
+          tech.startHour,
+          tech.endHour,
+        );
+        return { tech, stops: merged, google: null, error: null };
+      });
 
-        try {
-          if (movable.length >= 2) {
-            const optimized = await fetchRoute({
-              start: tech.start,
-              end: tech.end || tech.start,
-              stops: movable.map((stop) => ({
-                address: stop.appel.adresse,
-                minutesOnSite: stop.minutesOnSite,
-              })),
-              optimize: true,
-            });
-            movableOrder = optimized.waypointOrder.map(
-              (index) => movable[index].appel.id,
-            );
-          }
+      setRoutes(draft);
+      window.requestAnimationFrame(() => {
+        resultsRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      });
 
-          const merged = mergePinnedAroundMovable(
-            stops,
-            movableOrder,
-            tech.startHour,
-            tech.endHour,
-          ).slice(0, 25);
-
-          const departure = new Date(`${date}T${tech.startHour}:00`);
-          const google = await fetchRoute({
-            start: tech.start,
-            end: tech.end || tech.start,
-            stops: merged.map((stop) => ({
-              address: stop.appel.adresse,
-              minutesOnSite: stop.minutesOnSite,
-            })),
-            optimize: false,
-            departureTime: departure.toISOString(),
-          });
-
-          nextRoutes.push({ tech, stops: merged, google, error: null });
-        } catch (err) {
-          nextRoutes.push({
-            tech,
-            stops,
-            google: null,
-            error:
-              err instanceof Error
-                ? err.message
-                : "Google n'a pas pu calculer cette tournée.",
-          });
-        }
+      const withStops = draft.filter((route) => route.stops.length > 0);
+      if (withStops.length === 0) {
+        setError(
+          "Aucun arrêt assigné. Vérifiez les techniciens présents, les compétences et le quota préventif.",
+        );
+        return;
       }
 
-      setRoutes(nextRoutes);
+      setProgress(
+        `Optimisation Google Maps pour ${withStops.length} technicien(s)…`,
+      );
+
+      const googleRoutes = await Promise.all(
+        draft.map(async (route) => {
+          if (route.stops.length === 0) return route;
+          return buildTechRoute(route.tech, route.stops);
+        }),
+      );
+
+      setRoutes(googleRoutes);
+
+      const failed = googleRoutes.filter((route) => route.error);
+      if (failed.length > 0 && failed.length === withStops.length) {
+        setError(
+          `Google n'a pas renvoyé de routes (${failed[0]?.error}). Le calendrier affiche quand même l'horaire estimé.`,
+        );
+      } else if (failed.length > 0) {
+        setToast(
+          `${failed.length} tournée(s) sans trafic Google — horaires estimés affichés.`,
+        );
+      } else {
+        setToast("Tournées générées — calendrier mis à jour.");
+      }
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : "La génération a échoué. Réessayez.",
+      );
     } finally {
       setLoading(false);
+      setProgress(null);
     }
   }
 
@@ -219,8 +313,8 @@ function Workspace() {
     <div className="gt gt-shell">
       <p className="gt-banner">
         Prototype dispatch Guertech — données CSV fictives, non branché à
-        NetSuite. Les techniciens n&apos;utilisent pas cette plateforme : envoyez-leur
-        le lien Google Maps.
+        NetSuite. Les techniciens n&apos;utilisent pas cette plateforme :
+        envoyez-leur le lien Google Maps.
       </p>
       <header className="gt-header">
         <div>
@@ -248,9 +342,7 @@ function Workspace() {
         <div className="gt-stat">
           <span>Préventif à planifier / jour</span>
           <strong>{avgPreventifPerDay}</strong>
-          <em>
-            moyenne sur {businessDaysLeft} jours ouvrables restants
-          </em>
+          <em>moyenne sur {businessDaysLeft} jours ouvrables restants</em>
         </div>
         <div className="gt-stat">
           <span>Réactif en attente (2 j)</span>
@@ -334,9 +426,10 @@ function Workspace() {
           </label>
         </div>
         <p style={{ margin: 0, color: "var(--gt-muted)", fontSize: "0.88rem" }}>
-          Réactif : délai {SLA.reactif.delayDays} j, priorité {SLA.reactif.priority} (
-          {SLA.reactif.netsuiteId}). Préventif : {SLA.preventif.delayDays} j, priorité{" "}
-          {SLA.preventif.priority} ({SLA.preventif.netsuiteId}).
+          Réactif : délai {SLA.reactif.delayDays} j, priorité{" "}
+          {SLA.reactif.priority} ({SLA.reactif.netsuiteId}). Préventif :{" "}
+          {SLA.preventif.delayDays} j, priorité {SLA.preventif.priority} (
+          {SLA.preventif.netsuiteId}).
         </p>
       </section>
 
@@ -358,6 +451,7 @@ function Workspace() {
 
       {error ? <p className="gt-error">{error}</p> : null}
       {toast ? <p className="gt-toast">{toast}</p> : null}
+      {progress ? <p className="gt-toast">{progress}</p> : null}
 
       <div className="gt-sticky">
         <button
@@ -377,11 +471,13 @@ function Workspace() {
           onClick={generate}
           disabled={loading || calls.length === 0}
         >
-          {loading ? "Génération…" : "Générer les routes"}
+          {loading ? progress || "Génération…" : "Générer les routes"}
         </button>
       </div>
 
-      {routes ? <RouteBoard routes={routes} unassigned={unassigned} /> : null}
+      <div ref={resultsRef}>
+        {routes ? <RouteBoard routes={routes} unassigned={unassigned} /> : null}
+      </div>
     </div>
   );
 }
