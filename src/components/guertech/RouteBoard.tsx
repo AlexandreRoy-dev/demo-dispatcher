@@ -7,7 +7,7 @@ import { DRUMMONDVILLE_CENTER } from "@/lib/guertech/constants";
 import { ROAD_WINDOW } from "@/lib/guertech/optimize";
 import type { OvertimeWarning } from "@/lib/guertech/optimize";
 import type { PreventifSuggestion } from "@/lib/guertech/suggestions";
-import type { TechRoute, Unassigned } from "@/lib/guertech/types";
+import type { TechRoute } from "@/lib/guertech/types";
 import {
   buildGoogleMapsRouteUrl,
   buildRouteShareText,
@@ -15,9 +15,9 @@ import {
 
 type RouteBoardProps = {
   routes: TechRoute[];
-  unassigned: Unassigned[];
   suggestions?: PreventifSuggestion[];
   onAcceptSuggestion?: (suggestion: PreventifSuggestion) => void;
+  onAcceptAllSuggestions?: () => void;
   acceptingId?: string | null;
   overtimeWarnings?: OvertimeWarning[];
   overtimeIgnored?: boolean;
@@ -25,13 +25,15 @@ type RouteBoardProps = {
   onTrimOvertime?: () => void;
   onRemoveStop?: (techId: string, appelId: string) => void;
   removingId?: string | null;
+  onOpenTechPanel?: () => void;
+  emptyHint?: string;
 };
 
 export function RouteBoard({
   routes,
-  unassigned,
   suggestions = [],
   onAcceptSuggestion,
+  onAcceptAllSuggestions,
   acceptingId = null,
   overtimeWarnings = [],
   overtimeIgnored = false,
@@ -39,12 +41,17 @@ export function RouteBoard({
   onTrimOvertime,
   onRemoveStop,
   removingId = null,
+  onOpenTechPanel,
+  emptyHint,
 }: RouteBoardProps) {
   const withWork = routes.filter((route) => route.stops.length > 0);
-  const [techId, setTechId] = useState(withWork[0]?.tech.id ?? "");
+  const [techId, setTechId] = useState(routes[0]?.tech.id ?? "");
   const [view, setView] = useState<"calendar" | "list">("calendar");
   const current =
-    withWork.find((route) => route.tech.id === techId) ?? withWork[0] ?? null;
+    routes.find((route) => route.tech.id === techId) ??
+    withWork[0] ??
+    routes[0] ??
+    null;
 
   const [copyState, setCopyState] = useState("Copier le lien");
 
@@ -63,9 +70,21 @@ export function RouteBoard({
   if (!current) {
     return (
       <section className="gt-panel">
-        <h2>Tournées</h2>
+        <div className="gt-results-head">
+          <h2>Tournées</h2>
+          {onOpenTechPanel ? (
+            <button
+              type="button"
+              className="gt-btn-ghost gt-tech-panel-btn"
+              onClick={onOpenTechPanel}
+            >
+              Techniciens
+            </button>
+          ) : null}
+        </div>
         <p>
-          Aucun arrêt assigné. Vérifiez les techniciens présents et les appels.
+          Aucun technicien présent. Ouvrez le panneau Techniciens pour en
+          activer.
         </p>
       </section>
     );
@@ -100,22 +119,33 @@ export function RouteBoard({
   return (
     <section className="gt-panel">
       <div className="gt-results-head">
-        <h2>Tournées générées</h2>
-        <div className="gt-tabs">
-          <button
-            type="button"
-            className={view === "calendar" ? "on" : ""}
-            onClick={() => setView("calendar")}
-          >
-            Calendrier
-          </button>
-          <button
-            type="button"
-            className={view === "list" ? "on" : ""}
-            onClick={() => setView("list")}
-          >
-            Liste + carte
-          </button>
+        <h2>Tournées</h2>
+        <div className="gt-results-actions">
+          <div className="gt-tabs">
+            <button
+              type="button"
+              className={view === "calendar" ? "on" : ""}
+              onClick={() => setView("calendar")}
+            >
+              Calendrier
+            </button>
+            <button
+              type="button"
+              className={view === "list" ? "on" : ""}
+              onClick={() => setView("list")}
+            >
+              Liste + carte
+            </button>
+          </div>
+          {onOpenTechPanel ? (
+            <button
+              type="button"
+              className="gt-btn-ghost gt-tech-panel-btn"
+              onClick={onOpenTechPanel}
+            >
+              Techniciens
+            </button>
+          ) : null}
         </div>
       </div>
 
@@ -163,52 +193,62 @@ export function RouteBoard({
 
       {view === "calendar" ? (
         <>
-          <p className="gt-share-hint">
-            Horaires côte à côte. Les bandes hachurées sont les trajets Google
-            Maps entre les arrêts. Les blocs en pointillés sont des préventifs
-            à proximité suggérés dans les créneaux libres — cliquez pour les
-            ajouter.
-          </p>
+          {emptyHint && withWork.length === 0 ? (
+            <p className="gt-share-hint">{emptyHint}</p>
+          ) : (
+            <p className="gt-share-hint">
+              Horaires côte à côte. Les bandes hachurées sont les trajets Google
+              Maps. Suggestions en pointillés : cliquez{" "}
+              <strong>Accepter</strong> pour les ajouter.
+            </p>
+          )}
           <ScheduleCalendar
-            routes={withWork}
+            routes={routes}
             suggestions={suggestions}
             selectedTechId={current.tech.id}
             onSelectTech={setTechId}
             onAcceptSuggestion={onAcceptSuggestion}
+            onAcceptAllSuggestions={onAcceptAllSuggestions}
             acceptingId={acceptingId}
             onRemoveStop={onRemoveStop}
             removingId={removingId}
           />
-          <div className="gt-share" style={{ marginTop: "0.85rem" }}>
-            <strong style={{ alignSelf: "center" }}>{current.tech.name}</strong>
-            {current.google ? (
-              <>
-                <a
-                  className="gt-btn"
-                  href={mapsUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Ouvrir dans Google Maps
-                </a>
-                <button
-                  type="button"
-                  className="gt-btn-ghost"
-                  onClick={sendToTech}
-                >
-                  Envoyer au technicien
-                </button>
-                <button
-                  type="button"
-                  className="gt-btn-ghost"
-                  onClick={copyLink}
-                >
-                  {copyState}
-                </button>
-              </>
-            ) : null}
-          </div>
+          {withWork.length > 0 ? (
+            <div className="gt-share" style={{ marginTop: "0.85rem" }}>
+              <strong style={{ alignSelf: "center" }}>{current.tech.name}</strong>
+              {current.google ? (
+                <>
+                  <a
+                    className="gt-btn"
+                    href={mapsUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Ouvrir dans Google Maps
+                  </a>
+                  <button
+                    type="button"
+                    className="gt-btn-ghost"
+                    onClick={sendToTech}
+                  >
+                    Envoyer au technicien
+                  </button>
+                  <button
+                    type="button"
+                    className="gt-btn-ghost"
+                    onClick={copyLink}
+                  >
+                    {copyState}
+                  </button>
+                </>
+              ) : null}
+            </div>
+          ) : null}
         </>
+      ) : withWork.length === 0 ? (
+        <p className="gt-section-empty">
+          Aucun arrêt encore — générez les routes pour remplir la liste.
+        </p>
       ) : (
         <>
           <div className="gt-results-nav">
@@ -299,25 +339,6 @@ export function RouteBoard({
           />
         </>
       )}
-
-      {unassigned.length > 0 ? (
-        <div>
-          <h2>Non assignés ({unassigned.length})</h2>
-          <ul className="optimized-list">
-            {unassigned.slice(0, 40).map((item) => (
-              <li key={item.appel.id} className="optimized-item">
-                <span className="badge">—</span>
-                <div>
-                  <p className="optimized-address">{item.appel.magasin}</p>
-                  <p className="optimized-leg">
-                    {item.reason} · {item.appel.adresse}
-                  </p>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ) : null}
     </section>
   );
 }

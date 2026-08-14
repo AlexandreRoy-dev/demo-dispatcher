@@ -9,30 +9,47 @@ type TechRosterProps = {
   techs: Tech[];
   onChange: (id: string, patch: Partial<Tech>) => void;
   onAdd: () => void;
+  defaultOpen?: boolean;
+  hideToggle?: boolean;
 };
 
-export function TechRoster({ techs, onChange, onAdd }: TechRosterProps) {
-  const [open, setOpen] = useState(true);
+export function TechRoster({
+  techs,
+  onChange,
+  onAdd,
+  defaultOpen = true,
+  hideToggle = false,
+}: TechRosterProps) {
+  const [open, setOpen] = useState(defaultOpen);
   const presentCount = techs.filter((tech) => tech.present).length;
+  const showBody = hideToggle || open;
 
   return (
-    <section className={`gt-panel gt-roster${open ? "" : " collapsed"}`}>
-      <button
-        type="button"
-        className="gt-panel-toggle"
-        aria-expanded={open}
-        onClick={() => setOpen((current) => !current)}
-      >
-        <h2>Techniciens</h2>
-        <span className="gt-panel-toggle-meta">
-          {presentCount} présent{presentCount > 1 ? "s" : ""} / {techs.length}
-        </span>
-        <span className="gt-panel-chevron" aria-hidden>
-          {open ? "▾" : "▸"}
-        </span>
-      </button>
+    <section
+      className={
+        hideToggle
+          ? "gt-roster-plain"
+          : `gt-panel gt-roster${showBody ? "" : " collapsed"}`
+      }
+    >
+      {hideToggle ? null : (
+        <button
+          type="button"
+          className="gt-panel-toggle"
+          aria-expanded={open}
+          onClick={() => setOpen((current) => !current)}
+        >
+          <h2>Techniciens</h2>
+          <span className="gt-panel-toggle-meta">
+            {presentCount} présent{presentCount > 1 ? "s" : ""} / {techs.length}
+          </span>
+          <span className="gt-panel-chevron" aria-hidden>
+            {open ? "▾" : "▸"}
+          </span>
+        </button>
+      )}
 
-      {open ? (
+      {showBody ? (
         <>
           {techs.map((tech, index) => (
             <article

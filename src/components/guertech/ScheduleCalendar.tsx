@@ -39,6 +39,7 @@ type ScheduleCalendarProps = {
   selectedTechId?: string;
   onSelectTech?: (id: string) => void;
   onAcceptSuggestion?: (suggestion: PreventifSuggestion) => void;
+  onAcceptAllSuggestions?: () => void;
   acceptingId?: string | null;
   onRemoveStop?: (techId: string, appelId: string) => void;
   removingId?: string | null;
@@ -155,11 +156,12 @@ export function ScheduleCalendar({
   selectedTechId,
   onSelectTech,
   onAcceptSuggestion,
+  onAcceptAllSuggestions,
   acceptingId = null,
   onRemoveStop,
   removingId = null,
 }: ScheduleCalendarProps) {
-  const columns = routes.filter((route) => route.stops.length > 0);
+  const columns = routes;
 
   const byTech = useMemo(() => {
     const map = new Map<string, PreventifSuggestion[]>();
@@ -174,7 +176,7 @@ export function ScheduleCalendar({
   if (columns.length === 0) {
     return (
       <p className="gt-section-empty">
-        Aucune tournée à afficher dans le calendrier.
+        Aucun technicien présent à afficher dans le calendrier.
       </p>
     );
   }
@@ -183,12 +185,23 @@ export function ScheduleCalendar({
     <div className="gt-cal-wrap">
       {suggestions.length > 0 ? (
         <div className="gt-suggest-banner">
-          <strong>{suggestions.length} suggestion(s) préventif</strong>
-          <span>
-            Clients déjà sur la tournée (réactif) qui ont aussi un entretien
-            préventif en attente — proposés dans les créneaux libres, surtout en
-            fin de journée.
-          </span>
+          <div className="gt-suggest-banner-copy">
+            <strong>{suggestions.length} suggestion(s) préventif</strong>
+            <span>
+              Urgence puis proximité — créneaux libres pour maximiser la
+              journée.
+            </span>
+          </div>
+          <button
+            type="button"
+            className="gt-btn gt-accept-all-btn"
+            disabled={Boolean(acceptingId)}
+            onClick={() => onAcceptAllSuggestions?.()}
+          >
+            {acceptingId === "__all__"
+              ? "Acceptation…"
+              : `Tout accepter (${suggestions.length})`}
+          </button>
         </div>
       ) : null}
 
@@ -286,7 +299,7 @@ export function ScheduleCalendar({
                           <button
                             type="button"
                             className="gt-suggest-btn"
-                            disabled={acceptingId === item.suggestion.appel.id}
+                            disabled={Boolean(acceptingId)}
                             onClick={(event) => {
                               event.stopPropagation();
                               onAcceptSuggestion?.(item.suggestion);
@@ -294,7 +307,7 @@ export function ScheduleCalendar({
                           >
                             {acceptingId === item.suggestion.appel.id
                               ? "Ajout…"
-                              : "Ajouter au horaire"}
+                              : "Accepter"}
                           </button>
                         </div>
                       );

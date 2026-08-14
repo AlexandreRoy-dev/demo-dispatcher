@@ -8,7 +8,16 @@ import {
 import { ROAD_WINDOW } from "./optimize";
 import type { Appel, Tech } from "./types";
 
-export const DEMO_PLAN_DATE = "2026-08-13";
+export function todayIsoDate(): string {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+/** Demo fallback only if clock unavailable — prefer todayIsoDate(). */
+export const DEMO_PLAN_DATE = todayIsoDate();
 
 export type PlannerInputs = {
   date: string;
@@ -36,31 +45,38 @@ function isBlank(value: string | null | undefined): boolean {
   return value == null || String(value).trim() === "";
 }
 
-/** Roster identity only — presence & hours empty until suggestion or user input. */
+/** Roster with 4 techs présents by default (William, Marc, Sophie, Alex). */
 export function createBlankRoster(): Tech[] {
-  return [
-    blankTech("5", "William Villeneuve", "Centre-du-Québec"),
-    blankTech("12", "Marc Tremblay", "Mauricie"),
-    blankTech("18", "Sophie Gagnon", "Estrie"),
-    blankTech("21", "Alex Nguyen", "Montérégie"),
-    blankTech("27", "Karine Bouchard", "Chaudière-Appalaches"),
-    blankTech("33", "Jean-Philippe Roy", "Centre-du-Québec"),
-    blankTech("41", "Nadia Fortin", "Mauricie"),
+  const roster = [
+    blankTech("5", "William Villeneuve", "Centre-du-Québec", true),
+    blankTech("12", "Marc Tremblay", "Mauricie", true),
+    blankTech("18", "Sophie Gagnon", "Estrie", true),
+    blankTech("21", "Alex Nguyen", "Montérégie", true),
+    blankTech("27", "Karine Bouchard", "Chaudière-Appalaches", false),
+    blankTech("33", "Jean-Philippe Roy", "Centre-du-Québec", false),
+    blankTech("41", "Nadia Fortin", "Mauricie", false),
   ];
+  return roster;
 }
 
-function blankTech(id: string, name: string, region: string): Tech {
+function blankTech(
+  id: string,
+  name: string,
+  region: string,
+  present = false,
+): Tech {
   return {
     id,
     name,
-    present: false,
+    present,
     start: "",
     end: "",
     startHour: "",
     endHour: "",
     hours: 0,
     region,
-    skills: [], // filled by suggestion if empty; user chips still work after
+    // Full skill set so « Générer les routes » works without opening Techniciens first.
+    skills: [...ALL_SKILL_IDS],
   };
 }
 
@@ -89,7 +105,7 @@ export function suggestPlannerFields(options: {
 }): PlannerSuggestion {
   const summary: string[] = [];
   const date = isBlank(options.inputs.date)
-    ? DEMO_PLAN_DATE
+    ? todayIsoDate()
     : options.inputs.date;
   if (isBlank(options.inputs.date)) {
     summary.push(`Date → ${date}`);

@@ -3,9 +3,11 @@
 import { APIProvider } from "@vis.gl/react-google-maps";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { CallList } from "@/components/guertech/CallList";
+import { HelpGuide } from "@/components/guertech/HelpGuide";
 import { RouteBoard } from "@/components/guertech/RouteBoard";
 import { TechRoster } from "@/components/guertech/TechRoster";
 import {
+  ALL_SKILL_IDS,
   countBusinessDays,
   DRUMMONDVILLE_HQ,
   isReactifOverdue,
@@ -28,6 +30,7 @@ import {
   DEMO_PLAN_DATE,
   parseDurations,
   suggestPlannerFields,
+  todayIsoDate,
 } from "@/lib/guertech/suggest-form";
 import {
   suggestPreventifs,
@@ -143,7 +146,7 @@ function Workspace() {
   const [calls, setCalls] = useState<Appel[]>([]);
   const [techs, setTechs] = useState<Tech[]>(() => createBlankRoster());
   const [loadError, setLoadError] = useState<string | null>(null);
-  const [date, setDate] = useState("");
+  const [date, setDate] = useState(todayIsoDate);
   const [moveAssigned, setMoveAssigned] = useState<boolean | null>(null);
   const [pmQuota, setPmQuota] = useState("");
   const [reactifDuration, setReactifDuration] = useState("");
@@ -165,15 +168,37 @@ function Workspace() {
   );
   const [overtimeIgnored, setOvertimeIgnored] = useState(false);
   const [presenceTouched, setPresenceTouched] = useState<Set<string>>(
-    () => new Set(),
+    () => new Set(["5", "12", "18", "21"]),
   );
   const [skillsTouched, setSkillsTouched] = useState<Set<string>>(
     () => new Set(),
   );
   const [suggestionReady, setSuggestionReady] = useState(false);
+  const [techPanelOpen, setTechPanelOpen] = useState(false);
   const resultsRef = useRef<HTMLDivElement>(null);
 
-  const effectiveDate = date || DEMO_PLAN_DATE;
+  const effectiveDate = date || todayIsoDate();
+  const emptyRoutes = useMemo<TechRoute[]>(
+    () =>
+      techs
+        .filter((tech) => tech.present)
+        .map((tech) => ({
+          tech: {
+            ...tech,
+            startHour: tech.startHour || ROAD_WINDOW.start,
+            endHour: tech.endHour || ROAD_WINDOW.softEnd,
+            start: tech.start || DRUMMONDVILLE_HQ,
+            end: tech.end || tech.start || DRUMMONDVILLE_HQ,
+          },
+          stops: [],
+          google: null,
+          error: null,
+        })),
+    [techs],
+  );
+  // Keep calendar columns even if generate once set routes to [].
+  const displayRoutes =
+    routes && routes.length > 0 ? routes : emptyRoutes;
   const durations = useMemo(
     () => parseDurations(reactifDuration, preventifDuration),
     [reactifDuration, preventifDuration],
@@ -217,9 +242,11 @@ function Workspace() {
   );
 
   const preventifSuggestions = useMemo(() => {
-    if (!routes) return [];
+    if (!displayRoutes.some((route) => route.stops.length > 0)) return [];
     const assignedIds = new Set(
-      routes.flatMap((route) => route.stops.map((stop) => stop.appel.id)),
+      displayRoutes.flatMap((route) =>
+        route.stops.map((stop) => stop.appel.id),
+      ),
     );
     const candidates = calls.filter(
       (appel) =>
@@ -228,12 +255,12 @@ function Workspace() {
         !assignedIds.has(appel.id),
     );
     return suggestPreventifs({
-      routes,
+      routes: displayRoutes,
       candidates,
       durations,
       maxPerTech: 6,
     });
-  }, [routes, calls, durations]);
+  }, [displayRoutes, calls, durations]);
 
   const updateCall = useCallback((id: string, patch: Partial<Appel>) => {
     setCalls((current) =>
@@ -359,6 +386,71 @@ function Workspace() {
     [routes, acceptingId, overtimeIgnored, allowOvertime],
   );
 
+  const acceptAllSuggestions = useCallback(async () => {
+    if (!routes || acceptingId || preventifSuggestions.length === 0) return;
+
+    setAcceptingId("__all__");
+    setProgress(`Acceptation de ${preventifSuggestions.length} suggestion(s)…`);
+    setToast(null);
+    setError(null);
+
+    try {
+      const byTech = new Map<string, PreventifSuggestion[]>();
+      for (const suggestion of preventifSuggestions) {
+        const list = byTech.get(suggestion.techId) ?? [];
+        list.push(suggestion);
+        byTech.set(suggestion.techId, list);
+      }
+
+      let nextRoutes = [...routes];
+      const acceptedIds = new Set<string>();
+
+      for (const [techId, list] of byTech) {
+        const route = nextRoutes.find((item) => item.tech.id === techId);
+        if (!route) continue;
+        const ordered = [...list].sort(
+          (a, b) => a.suggestedStartMin - b.suggestedStartMin,
+        );
+        let nextStops = [...route.stops];
+        for (const suggestion of ordered) {
+          const newStop: DayStop = {
+            appel: { ...suggestion.appel, techId },
+            minutesOnSite: suggestion.minutesOnSite,
+            pinned: false,
+          };
+          const insertAt = Math.max(
+            0,
+            Math.min(suggestion.insertAfterIndex + 1, nextStops.length),
+          );
+          nextStops.splice(insertAt, 0, newStop);
+          acceptedIds.add(suggestion.appel.id);
+        }
+        const rebuilt = await buildTechRoute(route.tech, nextStops);
+        nextRoutes = nextRoutes.map((item) =>
+          item.tech.id === techId ? rebuilt : item,
+        );
+      }
+
+      setRoutes(nextRoutes);
+      setUnassigned((current) =>
+        current.filter((item) => !acceptedIds.has(item.appel.id)),
+      );
+      setOvertimeWarnings(evaluateRoadWindow(nextRoutes));
+      setToast(
+        `${acceptedIds.size} suggestion(s) ajoutée(s) aux horaires.`,
+      );
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Impossible d'accepter les suggestions.",
+      );
+    } finally {
+      setAcceptingId(null);
+      setProgress(null);
+    }
+  }, [routes, acceptingId, preventifSuggestions]);
+
   const removeStop = useCallback(
     async (techId: string, appelId: string) => {
       if (!routes || removingId) return;
@@ -479,7 +571,7 @@ function Workspace() {
     }
 
     const overtimeAllowed = allowOvertime === true;
-    const planDate = date || DEMO_PLAN_DATE;
+    const planDate = date || todayIsoDate();
     const quota = pmQuotaNumber > 0 ? pmQuotaNumber : Math.ceil(avgPreventifPerDay);
     const readyTechs = techs.map((tech) => ({
       ...tech,
@@ -487,6 +579,10 @@ function Workspace() {
       endHour: tech.endHour || ROAD_WINDOW.softEnd,
       start: tech.start || DRUMMONDVILLE_HQ,
       end: tech.end || tech.start || DRUMMONDVILLE_HQ,
+      skills:
+        tech.skills && tech.skills.length > 0
+          ? tech.skills
+          : [...ALL_SKILL_IDS],
     }));
 
     if (!readyTechs.some((tech) => tech.present)) {
@@ -495,6 +591,9 @@ function Workspace() {
       );
       return;
     }
+
+    // Persist filled defaults so the roster / calendar stay consistent.
+    setTechs(readyTechs);
 
     let workingCalls = calls;
     if (missingPlannedTime.length > 0) {
@@ -619,19 +718,26 @@ function Workspace() {
   }
 
   return (
-    <div className={`gt gt-shell${routes ? " gt-shell-wide" : ""}`}>
-      <header className="gt-header">
+    <div
+      className={`gt gt-shell${displayRoutes.length > 0 ? " gt-shell-wide" : ""}`}
+    >
+      <header className="gt-header gt-header-compact">
         <div>
           <p className="gt-kicker">Dispatch v2</p>
           <h1>Planification de la journée</h1>
-          <p>
-            Champs vides au départ.{" "}
-            <strong>Générer une suggestion</strong> remplit seulement ce qui
-            est vide (ratios Q4 + SLA réactif 2 j), sans écraser vos saisies.
-            Ensuite <strong>Générer les routes</strong> calcule les tournées.
-          </p>
+        </div>
+        <div className="gt-header-actions">
+          <button
+            type="button"
+            className="gt-btn-ghost"
+            onClick={() => setTechPanelOpen(true)}
+          >
+            Techniciens
+          </button>
         </div>
       </header>
+
+      <HelpGuide />
 
       {loadError ? <p className="gt-error">{loadError}</p> : null}
 
@@ -660,99 +766,7 @@ function Workspace() {
         </div>
       </div>
 
-      <section className="gt-panel" style={{ marginBottom: "1rem" }}>
-        <h2>Paramètres du jour</h2>
-        <div className="gt-row">
-          <label className="gt-field">
-            <span>Date à planifier</span>
-            <input
-              type="date"
-              value={date}
-              placeholder={DEMO_PLAN_DATE}
-              onChange={(event) => setDate(event.target.value)}
-            />
-          </label>
-          <fieldset className="gt-field">
-            <span>Déplacer les tâches déjà attribuées ?</span>
-            <label className="gt-check">
-              <input
-                type="radio"
-                name="move"
-                checked={moveAssigned === false}
-                onChange={() => setMoveAssigned(false)}
-              />
-              Non
-            </label>
-            <label className="gt-check">
-              <input
-                type="radio"
-                name="move"
-                checked={moveAssigned === true}
-                onChange={() => setMoveAssigned(true)}
-              />
-              Oui — n&apos;unlock pas les planifiés
-            </label>
-            {moveAssigned === null ? (
-              <em style={{ color: "var(--gt-muted)", fontSize: "0.8rem" }}>
-                Non choisi — la suggestion proposera Non
-              </em>
-            ) : null}
-          </fieldset>
-          <label className="gt-field">
-            <span>Entretiens préventifs à insérer</span>
-            <input
-              type="number"
-              min={0}
-              max={40}
-              value={pmQuota}
-              placeholder={`ex. ${Math.ceil(avgPreventifPerDay)} (ratio Q4)`}
-              onChange={(event) => setPmQuota(event.target.value)}
-            />
-          </label>
-          <label className="gt-field">
-            <span>Durée réactif (min)</span>
-            <input
-              type="number"
-              value={reactifDuration}
-              placeholder="90"
-              onChange={(event) => setReactifDuration(event.target.value)}
-            />
-          </label>
-          <label className="gt-field">
-            <span>Durée préventif (min)</span>
-            <input
-              type="number"
-              value={preventifDuration}
-              placeholder="60"
-              onChange={(event) => setPreventifDuration(event.target.value)}
-            />
-          </label>
-        </div>
-        <p style={{ margin: 0, color: "var(--gt-muted)", fontSize: "0.88rem" }}>
-          Réactif : délai {SLA.reactif.delayDays} j. Fenêtre route soft : 8 h–
-          {ROAD_WINDOW.softEndLabel}. Les champs déjà remplis ne sont jamais
-          écrasés par la suggestion.
-        </p>
-        <label className="gt-check" style={{ marginTop: "0.65rem" }}>
-          <input
-            type="checkbox"
-            checked={allowOvertime === true}
-            onChange={(event) => setAllowOvertime(event.target.checked)}
-          />
-          Autoriser les tournées après {ROAD_WINDOW.softEndLabel} (ignorer la
-          contrainte 8 h–5 h à la génération)
-        </label>
-      </section>
-
-      <div className="gt-roster-wrap">
-        <TechRoster techs={techs} onChange={updateTech} onAdd={addTech} />
-      </div>
-
-      {error ? <p className="gt-error">{error}</p> : null}
-      {toast ? <p className="gt-toast">{toast}</p> : null}
-      {progress ? <p className="gt-toast">{progress}</p> : null}
-
-      <div className="gt-sticky">
+      <div className="gt-sticky gt-sticky-top">
         <button
           type="button"
           className="gt-btn-ghost"
@@ -782,8 +796,12 @@ function Workspace() {
         </button>
       </div>
 
-      {routes ? (
-        <div className="gt-split" ref={resultsRef}>
+      {error ? <p className="gt-error">{error}</p> : null}
+      {toast ? <p className="gt-toast">{toast}</p> : null}
+      {progress ? <p className="gt-toast">{progress}</p> : null}
+
+      {displayRoutes.length > 0 ? (
+        <div className="gt-split gt-split-top" ref={resultsRef}>
           <aside className="gt-split-calls">
             <CallList
               calls={calls}
@@ -800,10 +818,10 @@ function Workspace() {
           </aside>
           <div className="gt-split-calendar">
             <RouteBoard
-              routes={routes}
-              unassigned={unassigned}
+              routes={displayRoutes}
               suggestions={preventifSuggestions}
               onAcceptSuggestion={acceptSuggestion}
+              onAcceptAllSuggestions={acceptAllSuggestions}
               acceptingId={acceptingId}
               overtimeWarnings={overtimeWarnings}
               overtimeIgnored={overtimeIgnored || allowOvertime === true}
@@ -811,6 +829,12 @@ function Workspace() {
               onTrimOvertime={trimOvertimeRoutes}
               onRemoveStop={removeStop}
               removingId={removingId}
+              onOpenTechPanel={() => setTechPanelOpen(true)}
+              emptyHint={
+                routes
+                  ? undefined
+                  : "Calendrier prêt — générez les routes pour remplir les colonnes."
+              }
             />
           </div>
         </div>
@@ -828,8 +852,126 @@ function Workspace() {
             onSearch={setSearch}
             onUpdate={updateCall}
           />
+          <p className="gt-section-empty">
+            Aucun technicien présent — ouvrez le panneau Techniciens.
+          </p>
         </div>
       )}
+
+      <details className="gt-params-details">
+        <summary>Paramètres du jour</summary>
+        <section className="gt-panel" style={{ marginTop: "0.75rem" }}>
+          <div className="gt-row">
+            <label className="gt-field">
+              <span>Date à planifier</span>
+              <input
+                type="date"
+                value={date}
+                onChange={(event) => setDate(event.target.value)}
+              />
+            </label>
+            <fieldset className="gt-field">
+              <span>Déplacer les tâches déjà attribuées ?</span>
+              <label className="gt-check">
+                <input
+                  type="radio"
+                  name="move"
+                  checked={moveAssigned === false}
+                  onChange={() => setMoveAssigned(false)}
+                />
+                Non
+              </label>
+              <label className="gt-check">
+                <input
+                  type="radio"
+                  name="move"
+                  checked={moveAssigned === true}
+                  onChange={() => setMoveAssigned(true)}
+                />
+                Oui — n&apos;unlock pas les planifiés
+              </label>
+              {moveAssigned === null ? (
+                <em style={{ color: "var(--gt-muted)", fontSize: "0.8rem" }}>
+                  Non choisi — la suggestion proposera Non
+                </em>
+              ) : null}
+            </fieldset>
+            <label className="gt-field">
+              <span>Entretiens préventifs à insérer</span>
+              <input
+                type="number"
+                min={0}
+                max={40}
+                value={pmQuota}
+                placeholder={`ex. ${Math.ceil(avgPreventifPerDay)} (ratio Q4)`}
+                onChange={(event) => setPmQuota(event.target.value)}
+              />
+            </label>
+            <label className="gt-field">
+              <span>Durée réactif (min)</span>
+              <input
+                type="number"
+                value={reactifDuration}
+                placeholder="90"
+                onChange={(event) => setReactifDuration(event.target.value)}
+              />
+            </label>
+            <label className="gt-field">
+              <span>Durée préventif (min)</span>
+              <input
+                type="number"
+                value={preventifDuration}
+                placeholder="60"
+                onChange={(event) => setPreventifDuration(event.target.value)}
+              />
+            </label>
+          </div>
+          <p
+            style={{ margin: 0, color: "var(--gt-muted)", fontSize: "0.88rem" }}
+          >
+            Réactif : délai {SLA.reactif.delayDays} j. Fenêtre route soft : 8 h–
+            {ROAD_WINDOW.softEndLabel}.
+          </p>
+          <label className="gt-check" style={{ marginTop: "0.65rem" }}>
+            <input
+              type="checkbox"
+              checked={allowOvertime === true}
+              onChange={(event) => setAllowOvertime(event.target.checked)}
+            />
+            Autoriser les tournées après {ROAD_WINDOW.softEndLabel}
+          </label>
+        </section>
+      </details>
+
+      {techPanelOpen ? (
+        <div className="gt-drawer-root">
+          <button
+            type="button"
+            className="gt-drawer-backdrop"
+            aria-label="Fermer"
+            onClick={() => setTechPanelOpen(false)}
+          />
+          <aside className="gt-drawer" role="dialog" aria-label="Techniciens">
+            <div className="gt-drawer-head">
+              <h2>Techniciens</h2>
+              <button
+                type="button"
+                className="gt-btn-ghost"
+                onClick={() => setTechPanelOpen(false)}
+              >
+                Fermer
+              </button>
+            </div>
+            <TechRoster
+              techs={techs}
+              onChange={updateTech}
+              onAdd={addTech}
+              defaultOpen
+              hideToggle
+            />
+          </aside>
+        </div>
+      ) : null}
     </div>
   );
 }
