@@ -301,10 +301,7 @@ export function optimizeDay(options: {
         !(options.asOfDate ? isReactifOverdue(item, options.asOfDate) : false),
     ),
   ];
-  const reactifToday = regionFirst(overdueFirst, regions).slice(
-    0,
-    Math.max(4, present.length * 2),
-  );
+  const reactifToday = regionFirst(overdueFirst, regions);
 
   for (const appel of reactifToday) {
     const minutes = onSiteMinutes(appel.type, durations);

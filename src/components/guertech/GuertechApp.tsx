@@ -75,7 +75,7 @@ async function buildTechRoute(
   const limited = [
     ...stops.filter((stop) => stop.pinned),
     ...stops.filter((stop) => !stop.pinned),
-  ].slice(0, 8);
+  ].slice(0, 12);
 
   const movable = limited.filter((stop) => !stop.pinned);
   let movableOrder = movable.map((stop) => stop.appel.id);
@@ -158,6 +158,7 @@ function Workspace() {
   const [routes, setRoutes] = useState<TechRoute[] | null>(null);
   const [unassigned, setUnassigned] = useState<Unassigned[]>([]);
   const [acceptingId, setAcceptingId] = useState<string | null>(null);
+  const [removingId, setRemovingId] = useState<string | null>(null);
   const [allowOvertime, setAllowOvertime] = useState<boolean | null>(null);
   const [overtimeWarnings, setOvertimeWarnings] = useState<OvertimeWarning[]>(
     [],
@@ -230,7 +231,7 @@ function Workspace() {
       routes,
       candidates,
       durations,
-      maxPerTech: 2,
+      maxPerTech: 6,
     });
   }, [routes, calls, durations]);
 
@@ -358,6 +359,63 @@ function Workspace() {
     [routes, acceptingId, overtimeIgnored, allowOvertime],
   );
 
+  const removeStop = useCallback(
+    async (techId: string, appelId: string) => {
+      if (!routes || removingId) return;
+      const route = routes.find((item) => item.tech.id === techId);
+      if (!route) return;
+      const removed = route.stops.find((stop) => stop.appel.id === appelId);
+      if (!removed) return;
+
+      setRemovingId(appelId);
+      setProgress(`Retrait de ${removed.appel.magasin}…`);
+      setError(null);
+
+      try {
+        const nextStops = route.stops.filter(
+          (stop) => stop.appel.id !== appelId,
+        );
+        const rebuilt =
+          nextStops.length === 0
+            ? { tech: route.tech, stops: [], google: null, error: null }
+            : await buildTechRoute(route.tech, nextStops);
+
+        const nextRoutes = (routes ?? []).map((item) =>
+          item.tech.id === techId ? rebuilt : item,
+        );
+        setRoutes(nextRoutes);
+        setUnassigned((current) => [
+          {
+            appel: removed.appel,
+            reason: "Retiré du calendrier",
+          },
+          ...current.filter((item) => item.appel.id !== appelId),
+        ]);
+        if (removed.pinned || removed.appel.planifie) {
+          setCalls((current) =>
+            current.map((item) =>
+              item.id === appelId
+                ? { ...item, planifie: false, heure: "", techId: "" }
+                : item,
+            ),
+          );
+        }
+        setOvertimeWarnings(evaluateRoadWindow(nextRoutes));
+        setToast(`${removed.appel.magasin} retiré de l'horaire.`);
+      } catch (err) {
+        setError(
+          err instanceof Error
+            ? err.message
+            : "Impossible de retirer cet arrêt.",
+        );
+      } finally {
+        setRemovingId(null);
+        setProgress(null);
+      }
+    },
+    [routes, removingId],
+  );
+
   const ignoreOvertimeWarning = useCallback(() => {
     setOvertimeIgnored(true);
     setAllowOvertime(true);
@@ -466,7 +524,7 @@ function Workspace() {
       const present = readyTechs.filter((tech) => tech.present);
       const mergeLeftovers: DayStop[] = [];
       const draft: TechRoute[] = present.map((tech) => {
-        const raw = (assigned.byTech[tech.id] ?? []).slice(0, 8);
+        const raw = (assigned.byTech[tech.id] ?? []).slice(0, 12);
         const movable = raw.filter((stop) => !stop.pinned);
         const { ordered, leftover } = mergePinnedOptimal(
           raw,
@@ -561,10 +619,10 @@ function Workspace() {
   }
 
   return (
-    <div className="gt gt-shell">
+    <div className={`gt gt-shell${routes ? " gt-shell-wide" : ""}`}>
       <header className="gt-header">
         <div>
-          <p className="gt-kicker">Guertech · Dispatch v2</p>
+          <p className="gt-kicker">Dispatch v2</p>
           <h1>Planification de la journée</h1>
           <p>
             Champs vides au départ.{" "}
@@ -686,20 +744,8 @@ function Workspace() {
         </label>
       </section>
 
-      <div className="gt-grid">
+      <div className="gt-roster-wrap">
         <TechRoster techs={techs} onChange={updateTech} onAdd={addTech} />
-        <CallList
-          calls={calls}
-          techs={techs}
-          asOfDate={effectiveDate}
-          filter={filter}
-          plannedOnly={plannedOnly}
-          search={search}
-          onFilter={setFilter}
-          onPlannedOnly={setPlannedOnly}
-          onSearch={setSearch}
-          onUpdate={updateCall}
-        />
       </div>
 
       {error ? <p className="gt-error">{error}</p> : null}
@@ -732,29 +778,58 @@ function Workspace() {
           onClick={generate}
           disabled={loading || calls.length === 0}
         >
-          {loading
-            ? progress || "Génération…"
-            : suggestionReady
-              ? "Générer les routes"
-              : "Générer les routes"}
+          {loading ? progress || "Génération…" : "Générer les routes"}
         </button>
       </div>
 
-      <div ref={resultsRef}>
-        {routes ? (
-          <RouteBoard
-            routes={routes}
-            unassigned={unassigned}
-            suggestions={preventifSuggestions}
-            onAcceptSuggestion={acceptSuggestion}
-            acceptingId={acceptingId}
-            overtimeWarnings={overtimeWarnings}
-            overtimeIgnored={overtimeIgnored || allowOvertime === true}
-            onIgnoreOvertime={ignoreOvertimeWarning}
-            onTrimOvertime={trimOvertimeRoutes}
+      {routes ? (
+        <div className="gt-split" ref={resultsRef}>
+          <aside className="gt-split-calls">
+            <CallList
+              calls={calls}
+              techs={techs}
+              asOfDate={effectiveDate}
+              filter={filter}
+              plannedOnly={plannedOnly}
+              search={search}
+              onFilter={setFilter}
+              onPlannedOnly={setPlannedOnly}
+              onSearch={setSearch}
+              onUpdate={updateCall}
+            />
+          </aside>
+          <div className="gt-split-calendar">
+            <RouteBoard
+              routes={routes}
+              unassigned={unassigned}
+              suggestions={preventifSuggestions}
+              onAcceptSuggestion={acceptSuggestion}
+              acceptingId={acceptingId}
+              overtimeWarnings={overtimeWarnings}
+              overtimeIgnored={overtimeIgnored || allowOvertime === true}
+              onIgnoreOvertime={ignoreOvertimeWarning}
+              onTrimOvertime={trimOvertimeRoutes}
+              onRemoveStop={removeStop}
+              removingId={removingId}
+            />
+          </div>
+        </div>
+      ) : (
+        <div className="gt-calls-solo">
+          <CallList
+            calls={calls}
+            techs={techs}
+            asOfDate={effectiveDate}
+            filter={filter}
+            plannedOnly={plannedOnly}
+            search={search}
+            onFilter={setFilter}
+            onPlannedOnly={setPlannedOnly}
+            onSearch={setSearch}
+            onUpdate={updateCall}
           />
-        ) : null}
-      </div>
+        </div>
+      )}
     </div>
   );
 }

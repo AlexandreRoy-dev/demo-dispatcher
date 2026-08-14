@@ -96,12 +96,20 @@ export function suggestPlannerFields(options: {
   }
 
   const ratio = preventifPerBusinessDay(date);
+  // Pack denser days: enough PM slots for present techs, not just the Q4 daily average.
+  const regionCount = new Set(
+    options.calls.filter((c) => c.type === "reactif").map((c) => c.region),
+  ).size;
+  const packTarget = Math.max(
+    Math.ceil(ratio),
+    Math.max(4, regionCount) * 3,
+  );
   const pmQuota = isBlank(options.inputs.pmQuota)
-    ? String(Math.max(1, Math.ceil(ratio)))
+    ? String(packTarget)
     : options.inputs.pmQuota;
   if (isBlank(options.inputs.pmQuota)) {
     summary.push(
-      `Quota préventif → ${pmQuota} (ratio Q4 ≈ ${ratio}/jour ouvrable)`,
+      `Quota préventif → ${pmQuota} (pack dense; ratio Q4 ≈ ${ratio}/jour)`,
     );
   }
 

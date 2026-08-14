@@ -40,6 +40,8 @@ type ScheduleCalendarProps = {
   onSelectTech?: (id: string) => void;
   onAcceptSuggestion?: (suggestion: PreventifSuggestion) => void;
   acceptingId?: string | null;
+  onRemoveStop?: (techId: string, appelId: string) => void;
+  removingId?: string | null;
 };
 
 const DAY_START = 7 * 60;
@@ -154,6 +156,8 @@ export function ScheduleCalendar({
   onSelectTech,
   onAcceptSuggestion,
   acceptingId = null,
+  onRemoveStop,
+  removingId = null,
 }: ScheduleCalendarProps) {
   const columns = routes.filter((route) => route.stops.length > 0);
 
@@ -308,6 +312,19 @@ export function ScheduleCalendar({
                         }}
                         title={`${item.arriveLabel}–${item.leaveLabel} · ${item.stop.appel.magasin}`}
                       >
+                        <button
+                          type="button"
+                          className="gt-cal-remove"
+                          title="Retirer de l'horaire"
+                          aria-label={`Retirer ${item.stop.appel.magasin}`}
+                          disabled={removingId === item.stop.appel.id}
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            onRemoveStop?.(route.tech.id, item.stop.appel.id);
+                          }}
+                        >
+                          ×
+                        </button>
                         <span className="gt-cal-event-time">
                           {item.arriveLabel}–{item.leaveLabel}
                           {item.stop.pinned ? " · planifié" : ""}

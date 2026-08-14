@@ -25,7 +25,10 @@ export type PreventifSuggestion = {
   reason: string;
 };
 
-const DEFAULT_TRAVEL = 20;
+const DEFAULT_TRAVEL = 15;
+/** Min free minutes (after travel) to open a gap for a 60‑min PM. */
+const MIN_GAP_FREE = 50;
+const MIN_GAP_SPAN = 55;
 
 function travelMinutes(route: TechRoute, stopIndex: number): number {
   const leg = route.google?.legs?.[stopIndex];
@@ -48,7 +51,7 @@ export function jobWindows(route: TechRoute): Array<{
     startMin: number;
     endMin: number;
   }> = [];
-  let cursor = parseMinutes(route.tech.startHour || "08:00");
+  let cursor = parseMinutes(route.tech.startHour || ROAD_WINDOW.start);
 
   route.stops.forEach((stop, index) => {
     cursor += travelMinutes(route, index);
@@ -76,9 +79,9 @@ export function findGaps(route: TechRoute): ScheduleGap[] {
   let cursor = dayStart;
   let previousId: string | null = null;
   for (const win of windows) {
-    if (win.startMin - cursor >= 50) {
+    if (win.startMin - cursor >= MIN_GAP_SPAN) {
       const freeMin = win.startMin - cursor - DEFAULT_TRAVEL;
-      if (freeMin >= 45) {
+      if (freeMin >= MIN_GAP_FREE) {
         gaps.push({
           startMin: cursor,
           endMin: win.startMin,
@@ -93,9 +96,9 @@ export function findGaps(route: TechRoute): ScheduleGap[] {
     previousId = win.stop.appel.id;
   }
 
-  if (dayEnd - cursor >= 70) {
+  if (dayEnd - cursor >= MIN_GAP_SPAN) {
     const freeMin = dayEnd - cursor - DEFAULT_TRAVEL;
-    if (freeMin >= 45) {
+    if (freeMin >= MIN_GAP_FREE) {
       gaps.push({
         startMin: cursor,
         endMin: dayEnd,
@@ -174,7 +177,7 @@ function scoreCandidate(
 
 /**
  * Suggest unassigned préventifs that fit in each tech's free gaps.
- * Same-client matches prefer the end-of-day slot (bottom of calendar).
+ * Packs multiple PMs into large gaps (especially end of day) for denser days.
  */
 export function suggestPreventifs(options: {
   routes: TechRoute[];
@@ -183,16 +186,18 @@ export function suggestPreventifs(options: {
   maxPerTech?: number;
 }): PreventifSuggestion[] {
   const durations = options.durations ?? DEFAULT_DURATIONS;
-  const maxPerTech = options.maxPerTech ?? 2;
+  const maxPerTech = options.maxPerTech ?? 6;
   const used = new Set<string>();
   const out: PreventifSuggestion[] = [];
+  const minutesOnSite = onSiteMinutes("preventif", durations);
+  const slotCost = minutesOnSite + DEFAULT_TRAVEL;
 
   for (const route of options.routes) {
     if (route.stops.length === 0) continue;
     const gaps = findGaps(route);
     if (gaps.length === 0) continue;
 
-    // Prefer end-of-day first so suggestions show at the bottom of the column.
+    // Pack end-of-day first, then largest mid-day gaps.
     const orderedGaps = [...gaps].sort((a, b) => {
       if (a.endOfDay !== b.endOfDay) return a.endOfDay ? -1 : 1;
       return b.freeMin - a.freeMin;
@@ -207,49 +212,54 @@ export function suggestPreventifs(options: {
 
     for (const gap of orderedGaps) {
       if (added >= maxPerTech) break;
-      const minutesOnSite = onSiteMinutes("preventif", durations);
-      if (gap.freeMin < minutesOnSite) continue;
-
-      // Same-client pairs prefer the end-of-day gap when available.
-      const match =
-        ranked.find((item) => {
-          if (used.has(item.appel.id)) return false;
-          if (item.score >= 9 && !gap.endOfDay) {
-            const hasEndGap = orderedGaps.some(
-              (g) => g.endOfDay && g.freeMin >= minutesOnSite,
-            );
-            if (hasEndGap) return false;
-          }
-          return true;
-        }) ?? null;
-      if (!match) break;
-
-      used.add(match.appel.id);
-
+      let remaining = gap.freeMin;
+      let cursor = gap.startMin + DEFAULT_TRAVEL;
       let insertAfterIndex = gap.afterStopId
         ? route.stops.findIndex((s) => s.appel.id === gap.afterStopId)
         : -1;
 
-      // Stack same-client PM after that client's stop when using end-of-day
-      // only if that stop is the last one; otherwise keep gap insertion point.
-      if (
-        match.afterStopIndex != null &&
-        gap.endOfDay &&
-        match.afterStopIndex === route.stops.length - 1
-      ) {
-        insertAfterIndex = match.afterStopIndex;
-      }
+      while (remaining >= minutesOnSite && added < maxPerTech) {
+        const match =
+          ranked.find((item) => {
+            if (used.has(item.appel.id)) return false;
+            // Prefer stacking same-client into end-of-day when available
+            if (item.score >= 9 && !gap.endOfDay) {
+              const hasEndGap = orderedGaps.some(
+                (g) => g.endOfDay && g.freeMin >= minutesOnSite,
+              );
+              if (hasEndGap) return false;
+            }
+            return true;
+          }) ?? null;
+        if (!match) break;
 
-      out.push({
-        techId: route.tech.id,
-        appel: match.appel,
-        gap,
-        insertAfterIndex,
-        suggestedStartMin: gap.startMin + DEFAULT_TRAVEL,
-        minutesOnSite,
-        reason: match.reason,
-      });
-      added += 1;
+        used.add(match.appel.id);
+
+        let insertAt = insertAfterIndex;
+        if (
+          match.afterStopIndex != null &&
+          gap.endOfDay &&
+          match.afterStopIndex === route.stops.length - 1 &&
+          added === 0
+        ) {
+          insertAt = match.afterStopIndex;
+        }
+
+        out.push({
+          techId: route.tech.id,
+          appel: match.appel,
+          gap,
+          insertAfterIndex: insertAt,
+          suggestedStartMin: cursor,
+          minutesOnSite,
+          reason: match.reason,
+        });
+        added += 1;
+        cursor += slotCost;
+        remaining -= slotCost;
+        // Subsequent packs in the same gap insert after the growing tail conceptually
+        insertAfterIndex = Math.max(insertAfterIndex, route.stops.length - 1);
+      }
     }
   }
 

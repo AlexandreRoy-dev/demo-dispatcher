@@ -23,6 +23,8 @@ type RouteBoardProps = {
   overtimeIgnored?: boolean;
   onIgnoreOvertime?: () => void;
   onTrimOvertime?: () => void;
+  onRemoveStop?: (techId: string, appelId: string) => void;
+  removingId?: string | null;
 };
 
 export function RouteBoard({
@@ -35,6 +37,8 @@ export function RouteBoard({
   overtimeIgnored = false,
   onIgnoreOvertime,
   onTrimOvertime,
+  onRemoveStop,
+  removingId = null,
 }: RouteBoardProps) {
   const withWork = routes.filter((route) => route.stops.length > 0);
   const [techId, setTechId] = useState(withWork[0]?.tech.id ?? "");
@@ -172,6 +176,8 @@ export function RouteBoard({
             onSelectTech={setTechId}
             onAcceptSuggestion={onAcceptSuggestion}
             acceptingId={acceptingId}
+            onRemoveStop={onRemoveStop}
+            removingId={removingId}
           />
           <div className="gt-share" style={{ marginTop: "0.85rem" }}>
             <strong style={{ alignSelf: "center" }}>{current.tech.name}</strong>
